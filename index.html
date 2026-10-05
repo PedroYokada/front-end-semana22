@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Trilha interativa de Programação Front-End: REST, GraphQL, OAuth e JWT." />
+  <meta name="description" content="Trilha interativa de Programação Front-End: APIs RESTful, GraphQL, OAuth, JWT e experiência do usuário." />
   <title>Programação Front-End — Semana 22</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
@@ -11,10 +11,7 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">
-      <span class="brand-mark">&lt;/&gt;</span>
-      <div><strong>Programação Front-End</strong><small>Semana 22 • Integração com serviços externos</small></div>
-    </div>
+    <div class="brand"><span class="brand-mark">&lt;/&gt;</span><div><strong>Programação Front-End</strong><small>Semana 22 • Integração com serviços externos</small></div></div>
     <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">☰</button>
     <nav id="mainNav" aria-label="Navegação principal">
       <a href="#inicio">Início</a><a href="#rest">REST</a><a href="#graphql">GraphQL</a><a href="#auth">OAuth/JWT</a><a href="#laboratorio">Laboratório</a><a href="#atividade">Atividade</a><a href="#quiz-final">Quiz final</a><a href="#entrega">Entrega</a>
@@ -26,20 +23,17 @@
       <div class="hero-copy">
         <span class="eyebrow">Educação Profissional Paulista • Técnico em Desenvolvimento de Sistemas</span>
         <h1>Avançando na integração com serviços externos</h1>
-        <p>Uma trilha interativa para revisar e praticar <strong>APIs RESTful, GraphQL, OAuth e JWT</strong>, conectando conceitos de integração com situações reais do desenvolvimento front-end.</p>
+        <p>Uma trilha de estudo completa para compreender como uma interface front-end conversa com serviços externos, solicita dados, autentica usuários e informa o que está acontecendo na tela.</p>
         <div class="hero-actions"><a class="btn primary" href="#identificacao">Iniciar trilha</a><a class="btn ghost" href="materiais/atividade_oauth_jwt.docx" target="_blank">Abrir atividade original</a></div>
-        <div class="learning-line" aria-label="Progressão do conteúdo"><span>REST</span><b>→</b><span>GraphQL</span><b>→</b><span>OAuth</span><b>→</b><span>JWT</span><b>→</b><span>UX de autenticação</span></div>
+        <div class="learning-line"><span>API</span><b>→</b><span>REST</span><b>→</b><span>GraphQL</span><b>→</b><span>OAuth</span><b>→</b><span>JWT</span><b>→</b><span>Feedback visual</span></div>
       </div>
       <aside class="hero-panel">
-        <h2>Seu progresso</h2>
-        <div class="progress-ring" id="progressRing"><span id="progressPercent">0%</span></div>
-        <p id="progressText">Comece preenchendo sua identificação.</p>
-        <div class="step-mini" id="miniSteps"></div>
+        <h2>Seu progresso</h2><div class="progress-ring" id="progressRing"><span id="progressPercent">0%</span></div><p id="progressText">Comece preenchendo sua identificação.</p><div class="step-mini" id="miniSteps"></div>
       </aside>
     </section>
 
     <section id="identificacao" class="section soft">
-      <div class="section-head"><span class="kicker">Etapa inicial</span><h2>Identificação do estudante</h2><p>Esses dados aparecerão no relatório final e no PDF.</p></div>
+      <div class="section-head"><span class="kicker">Etapa inicial</span><h2>Identificação do estudante</h2><p>Esses dados serão usados no relatório final e no PDF de entrega.</p></div>
       <div class="form-grid card">
         <label>Nome completo<input id="studentName" type="text" autocomplete="name" placeholder="Digite seu nome" /></label>
         <label>Turma<input id="studentClass" type="text" placeholder="Ex.: 2º DS A" /></label>
@@ -50,107 +44,179 @@
     </section>
 
     <section class="section" id="trilha">
-      <div class="section-head"><span class="kicker">Mapa da aprendizagem</span><h2>Trilha da Semana 22</h2></div>
+      <div class="section-head"><span class="kicker">Mapa da aprendizagem</span><h2>Trilha da Semana 22</h2><p>Você vai partir da comunicação com APIs, comparar REST e GraphQL e depois estudar autenticação com OAuth e JWT.</p></div>
       <div class="timeline" id="timeline"></div>
     </section>
 
     <section id="rest" class="section soft lesson-section">
-      <div class="section-head"><span class="kicker">Aula 1</span><h2>Integração com APIs RESTful</h2><p>REST é apresentado no material como um estilo arquitetural para criar APIs de forma padronizada e fácil de consumir. As requisições são independentes, recursos são identificados por URLs e JSON é um formato comum de resposta.</p></div>
-      <div class="concept-grid">
-        <article class="concept-card"><span class="icon">↔</span><h3>Stateless</h3><p>Cada requisição é independente; o servidor não mantém o estado do cliente entre requisições.</p></article>
-        <article class="concept-card"><span class="icon">🔗</span><h3>Recursos e URLs</h3><p>Um recurso é identificado por uma URL, como <code>/users/1</code>.</p></article>
-        <article class="concept-card"><span class="icon">{ }</span><h3>JSON</h3><p>Formato leve e comum para troca de dados entre sistemas.</p></article>
-        <article class="concept-card"><span class="icon">📖</span><h3>Documentação</h3><p>Ajuda a compreender regras, endpoints e formas corretas de integração.</p></article>
+      <div class="section-head"><span class="kicker">Aula 1</span><h2>Integração com APIs RESTful</h2><p>A aula apresenta REST como um estilo arquitetural para construir APIs de forma padronizada, com requisições independentes, recursos identificados por URLs, uso de métodos HTTP e respostas frequentemente em JSON.</p></div>
+
+      <div class="theory-block card">
+        <div class="theory-title"><span class="theory-number">1</span><div><h3>Antes de REST: o que é uma API?</h3><p>API é uma forma organizada de permitir que dois sistemas troquem informações ou utilizem funcionalidades um do outro.</p></div></div>
+        <div class="two-col">
+          <div><h4>Explicação técnica</h4><p>O front-end envia uma <strong>requisição</strong> para um serviço. Esse serviço processa o pedido e devolve uma <strong>resposta</strong>. A API define quais caminhos, dados e regras podem ser utilizados nessa comunicação.</p></div>
+          <aside class="analogy"><strong>💡 Pense assim: o garçom</strong><p>Você não entra na cozinha para preparar seu prato. Você faz o pedido ao garçom, ele leva a solicitação à cozinha e depois traz a resposta. A API faz o papel desse intermediário entre sistemas.</p></aside>
+        </div>
+        <div class="life-card"><strong>🌎 Onde isso aparece na vida real?</strong><span>Aplicativos de clima, mapas, pagamentos, envio de mensagens, login social e consulta de produtos usam integrações com serviços externos.</span></div>
       </div>
 
-      <div class="method-grid" id="httpMethods">
-        <button data-method="GET"><strong>GET</strong><span>Ler dados</span></button>
-        <button data-method="POST"><strong>POST</strong><span>Criar</span></button>
-        <button data-method="PUT"><strong>PUT</strong><span>Atualizar</span></button>
-        <button data-method="DELETE"><strong>DELETE</strong><span>Remover</span></button>
-      </div>
-      <div class="code-explainer card" id="methodExplain"><strong>Escolha um método HTTP.</strong><p>O exemplo aparecerá aqui.</p></div>
-
-      <div class="flow card">
-        <h3>Fluxo de uma integração</h3>
-        <div class="flow-row"><span>Front-End</span><b>requisição →</b><span>API / Serviço externo</span><b>→ resposta JSON</b><span>Front-End</span></div>
+      <div class="concept-grid six">
+        <article class="concept-card"><span class="icon">🖥️</span><h3>Cliente</h3><p>É quem solicita algo. Em nosso contexto, normalmente o navegador ou o front-end.</p><small><strong>Analogia:</strong> a pessoa que faz o pedido.</small></article>
+        <article class="concept-card"><span class="icon">🏢</span><h3>Servidor</h3><p>Recebe a requisição, processa e devolve uma resposta.</p><small><strong>Analogia:</strong> a cozinha que prepara o pedido.</small></article>
+        <article class="concept-card"><span class="icon">🚪</span><h3>Endpoint</h3><p>É um endereço específico disponibilizado pela API, como <code>/produtos</code>.</p><small><strong>Analogia:</strong> uma porta para um setor específico.</small></article>
+        <article class="concept-card"><span class="icon">🔗</span><h3>URL</h3><p>Identifica o recurso que queremos acessar, por exemplo <code>/users/1</code>.</p><small><strong>Analogia:</strong> o endereço para encontrar o destino.</small></article>
+        <article class="concept-card"><span class="icon">↔</span><h3>Stateless</h3><p>Cada requisição é independente; ela precisa trazer o necessário para ser entendida.</p><small><strong>Analogia:</strong> cada pedido vem com suas próprias instruções.</small></article>
+        <article class="concept-card"><span class="icon">{ }</span><h3>JSON</h3><p>Formato textual muito usado para organizar e transportar dados.</p><small><strong>Analogia:</strong> uma ficha com campos e valores.</small></article>
       </div>
 
-      <div class="simulator card">
-        <div><span class="kicker">Simulador</span><h3>Requisição REST</h3><p>Clique para simular uma leitura de dados.</p><button class="btn primary" id="simulateGet">Executar GET</button></div>
-        <pre id="restConsole" aria-live="polite">// aguardando requisição...</pre>
+      <div class="json-teach card">
+        <div><span class="kicker">Entendendo os dados</span><h3>Como ler um JSON?</h3><p>JSON organiza informações em pares de <strong>chave</strong> e <strong>valor</strong>. Veja um exemplo simples de produto.</p><pre>{
+  "nome": "Mouse",
+  "preco": 79.90,
+  "disponivel": true
+}</pre></div>
+        <div class="explain-list"><p><code>"nome"</code> → chave que identifica a informação.</p><p><code>"Mouse"</code> → valor associado à chave.</p><p><code>79.90</code> → valor numérico.</p><p><code>true</code> → valor lógico.</p></div>
       </div>
 
-      <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 1 — Integração com APIs RESTful</h3><p>Abra os slides, acompanhe o conteúdo e volte para responder ao quiz.</p></div><a class="btn primary" href="materiais/aula1_restful.pptx" target="_blank">Abrir slides</a></div>
+      <div class="theory-block card">
+        <div class="theory-title"><span class="theory-number">2</span><div><h3>Métodos HTTP: o que você quer fazer?</h3><p>O método ajuda a indicar a intenção da requisição.</p></div></div>
+        <div class="analogy inline"><strong>💡 Pense em uma loja:</strong><p>consultar, cadastrar, atualizar e remover são ações diferentes. Os métodos HTTP ajudam a expressar essas intenções.</p></div>
+        <div class="method-grid" id="httpMethods">
+          <button data-method="GET"><strong>GET</strong><span>Consultar / ler</span></button>
+          <button data-method="POST"><strong>POST</strong><span>Criar</span></button>
+          <button data-method="PUT"><strong>PUT</strong><span>Atualizar</span></button>
+          <button data-method="DELETE"><strong>DELETE</strong><span>Remover</span></button>
+        </div>
+        <div class="code-explainer card inner" id="methodExplain"><strong>Escolha um método HTTP.</strong><p>O exemplo aparecerá aqui.</p></div>
+      </div>
+
+      <div class="flow card"><span class="kicker">Passo a passo</span><h3>O que acontece em uma integração?</h3><div class="flow-steps"><div><b>1</b><span>Usuário solicita algo na interface</span></div><div><b>2</b><span>Front-end cria a requisição</span></div><div><b>3</b><span>API recebe o pedido</span></div><div><b>4</b><span>Servidor processa</span></div><div><b>5</b><span>Resposta retorna em dados</span></div><div><b>6</b><span>Front-end atualiza a tela</span></div></div></div>
+
+      <div class="theory-block card">
+        <h3>📖 Por que a documentação de uma API é importante?</h3><p>A documentação orienta como realizar a integração: quais recursos existem, quais caminhos utilizar, qual método corresponde a cada ação, quais dados enviar e que tipo de resposta esperar.</p>
+        <div class="analogy inline"><strong>💡 Pense assim: manual de instruções</strong><p>Sem o manual você pode até tentar usar um equipamento, mas perde tempo experimentando. A documentação reduz tentativas e ajuda a seguir as regras do serviço.</p></div>
+        <div class="mini-grid"><span>Endpoints disponíveis</span><span>Métodos aceitos</span><span>Dados de entrada</span><span>Formato da resposta</span><span>Autenticação</span><span>Possíveis erros</span></div>
+      </div>
+
+      <details class="think-card"><summary>🤔 Pare e pense: por que usar uma API pronta?</summary><p>Porque uma aplicação pode aproveitar uma funcionalidade externa em vez de desenvolver tudo do zero. O próprio material usa o envio de SMS como exemplo de integração com um serviço pronto.</p></details>
+
+      <div class="simulator card"><div><span class="kicker">Simulador</span><h3>Requisição REST</h3><p>Clique para visualizar uma requisição de leitura e uma resposta JSON simulada.</p><button class="btn primary" id="simulateGet">Executar GET</button></div><pre id="restConsole" aria-live="polite">// aguardando requisição...</pre></div>
+
+      <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 1 — Integração com APIs RESTful</h3><p>Abra os slides, acompanhe o conteúdo original e volte para responder ao quiz.</p></div><a class="btn primary" href="materiais/aula1_restful.pptx" target="_blank">Abrir slides</a></div>
       <div class="quiz card" data-quiz="rest"><div class="quiz-head"><h3>Quiz — Aula 1</h3><span class="quiz-score" id="score-rest">0/5</span></div><div id="quiz-rest"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="rest">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="rest">Refazer</button></div><div class="quiz-result" id="result-rest"></div></div>
     </section>
 
     <section id="graphql" class="section lesson-section">
-      <div class="section-head"><span class="kicker">Aula 2</span><h2>Integração com GraphQL</h2><p>O material trabalha GraphQL para consultas eficientes, definindo esquemas, tipos, consultas e relacionamentos, além de recuperar somente os dados necessários.</p></div>
+      <div class="section-head"><span class="kicker">Aula 2</span><h2>Integração com GraphQL</h2><p>O material avança para GraphQL, destacando consultas eficientes, definição de esquema, tipos, consultas e relacionamentos, além da possibilidade de recuperar apenas os dados necessários.</p></div>
+
+      <div class="theory-block card">
+        <div class="theory-title"><span class="theory-number blue">1</span><div><h3>Qual problema o GraphQL ajuda a resolver?</h3><p>Em algumas telas, o front-end precisa de um conjunto específico de dados. GraphQL permite descrever na própria consulta quais campos devem retornar.</p></div></div>
+        <div class="two-col"><div><h4>Explicação técnica</h4><p>Em GraphQL, o cliente envia uma <strong>query</strong> descrevendo os campos desejados. A consulta é validada com base em um <strong>schema</strong>, que define os tipos de dados e as operações disponíveis.</p></div><aside class="analogy blue"><strong>💡 Pense assim: monte seu pedido</strong><p>REST pode lembrar um combo já definido. GraphQL pode lembrar um pedido em que você seleciona exatamente os itens que deseja receber.</p></aside></div>
+      </div>
+
       <div class="compare-grid">
-        <article class="card"><span class="badge">REST</span><h3>Recursos por endpoints</h3><pre>GET /usuarios/1</pre><p>A resposta depende do formato definido pelo endpoint.</p></article>
-        <article class="card"><span class="badge blue">GraphQL</span><h3>Campos solicitados na consulta</h3><pre>query {
+        <article class="card"><span class="badge">REST</span><h3>Resposta definida pelo endpoint</h3><pre>GET /usuarios/1</pre><p>O endpoint possui uma estrutura de resposta previamente definida pelo serviço.</p></article>
+        <article class="card"><span class="badge blue">GraphQL</span><h3>Campos definidos na consulta</h3><pre>query {
   usuario {
     nome
     email
   }
-}</pre><p>O cliente pode solicitar apenas os campos necessários.</p></article>
+}</pre><p>O cliente declara quais campos deseja obter naquela consulta.</p></article>
+      </div>
+      <p class="note"><strong>Importante:</strong> isso não significa que GraphQL seja sempre “melhor”. REST e GraphQL são abordagens diferentes e podem ser adequadas a contextos diferentes.</p>
+
+      <div class="concept-grid four">
+        <article class="concept-card"><span class="icon">🔎</span><h3>Query</h3><p>É a consulta enviada para solicitar dados.</p><small><strong>Analogia:</strong> a lista do que você deseja pedir.</small></article>
+        <article class="concept-card"><span class="icon">🏗️</span><h3>Schema</h3><p>Descreve os tipos e operações disponíveis.</p><small><strong>Analogia:</strong> a planta da casa mostrando o que existe.</small></article>
+        <article class="concept-card"><span class="icon">🧩</span><h3>Type</h3><p>Define a estrutura de determinado conjunto de dados.</p><small><strong>Analogia:</strong> um molde que diz quais características um objeto possui.</small></article>
+        <article class="concept-card"><span class="icon">🔗</span><h3>Relacionamento</h3><p>Mostra como informações diferentes se conectam.</p><small><strong>Exemplo:</strong> evento → palestrante → local.</small></article>
       </div>
 
-      <div class="graphql-builder card">
-        <div><span class="kicker">Explorador visual</span><h3>Monte uma consulta</h3><p>Selecione os dados que deseja recuperar:</p>
-          <label class="check"><input class="gql-field" type="checkbox" value="nome" checked /> nome</label>
-          <label class="check"><input class="gql-field" type="checkbox" value="email" /> email</label>
-          <label class="check"><input class="gql-field" type="checkbox" value="telefone" /> telefone</label>
-        </div>
-        <div><h4>Query</h4><pre id="gqlQuery"></pre></div><div><h4>Resposta simulada</h4><pre id="gqlResponse"></pre></div>
-      </div>
+      <div class="schema-card card"><div><h3>🏗️ Schema como planta de uma casa</h3><p>Uma planta mostra quais cômodos existem e como se conectam. No GraphQL, o schema descreve quais tipos existem, quais campos cada tipo possui e quais consultas podem ser realizadas.</p></div><pre>type Evento {
+  titulo: String
+  palestrante: Palestrante
+  local: Local
+}</pre></div>
 
-      <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 2 — Integração com GraphQL</h3><p>O material também orienta uma atividade prática em dupla de consulta e manipulação de dados.</p></div><a class="btn primary" href="materiais/aula2_graphql.pptx" target="_blank">Abrir slides</a></div>
+      <div class="graphql-builder card"><div><span class="kicker">Explorador visual</span><h3>Monte uma consulta</h3><p>Selecione apenas os dados que você precisa:</p><label class="check"><input class="gql-field" type="checkbox" value="nome" checked /> nome</label><label class="check"><input class="gql-field" type="checkbox" value="email" /> email</label><label class="check"><input class="gql-field" type="checkbox" value="telefone" /> telefone</label></div><div><h4>Query</h4><pre id="gqlQuery"></pre></div><div><h4>Resposta simulada</h4><pre id="gqlResponse"></pre></div></div>
+
+      <details class="think-card"><summary>🤔 Pare e pense: você precisa de 30 campos, mas usa apenas 2?</summary><p>Uma consulta personalizada pode ser útil quando a interface precisa de um subconjunto específico de informações. A Aula 2 destaca justamente a recuperação apenas dos dados necessários.</p></details>
+
+      <div class="life-card wide"><strong>🌎 Onde isso aparece na vida real?</strong><span>Interfaces com várias telas podem precisar de combinações diferentes de dados. GraphQL permite que cada consulta expresse os campos necessários para aquela situação.</span></div>
+
+      <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 2 — Integração com GraphQL</h3><p>O material também orienta uma atividade prática em dupla para consulta e manipulação de dados.</p></div><a class="btn primary" href="materiais/aula2_graphql.pptx" target="_blank">Abrir slides</a></div>
       <div class="quiz card" data-quiz="graphql"><div class="quiz-head"><h3>Quiz — Aula 2</h3><span class="quiz-score" id="score-graphql">0/5</span></div><div id="quiz-graphql"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="graphql">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="graphql">Refazer</button></div><div class="quiz-result" id="result-graphql"></div></div>
     </section>
 
     <section id="auth" class="section soft lesson-section">
-      <div class="section-head"><span class="kicker">Aula 3</span><h2>Autenticação com OAuth e JWT</h2><p>A aula aborda autenticação segura, login com conta de terceiros como Google, uso de JWT e a importância de feedback visual no front-end.</p></div>
-      <div class="auth-flow card">
-        <div class="auth-node">Usuário</div><span>→</span><div class="auth-node">Front-End</div><span>→</span><div class="auth-node">Google OAuth</div><span>→</span><div class="auth-node">Back-End</div><span>→</span><div class="auth-node">JWT</div><span>→</span><div class="auth-node success">Sessão autenticada</div>
+      <div class="section-head"><span class="kicker">Aula 3</span><h2>Autenticação com OAuth e JWT</h2><p>A aula trabalha autenticação segura, login com conta de terceiros como Google, uso de JWT e feedback visual para tornar o processo de login mais claro para o usuário.</p></div>
+
+      <div class="compare-grid auth-compare">
+        <article class="card"><span class="badge">Autenticação</span><h3>Quem é você?</h3><p>É o processo de verificar a identidade de quem está tentando entrar.</p><div class="analogy inline"><strong>💡 Escola:</strong><p>mostrar sua carteirinha para confirmar sua identidade.</p></div></article>
+        <article class="card"><span class="badge blue">Autorização</span><h3>O que você pode fazer?</h3><p>Depois de saber quem é o usuário, o sistema pode controlar quais recursos ele pode acessar.</p><div class="analogy inline blue"><strong>💡 Escola:</strong><p>saber quais salas e sistemas aquele usuário tem permissão para acessar.</p></div></article>
       </div>
 
-      <div class="login-demo card">
-        <div><span class="kicker">Simulador didático</span><h3>Fluxo de login</h3><p>Não realiza autenticação real. Apenas representa as etapas.</p><button class="google-btn" id="loginDemo">G <span>Entrar com Google</span></button></div>
-        <ol id="loginSteps"><li>Pronto para iniciar.</li></ol>
+      <div class="theory-block card">
+        <div class="theory-title"><span class="theory-number">1</span><div><h3>OAuth: autenticação com um serviço confiável</h3><p>No material, Google aparece como exemplo de conta de terceiros utilizada para login.</p></div></div>
+        <div class="two-col"><div><h4>Explicação simples</h4><p>Em vez de criar uma nova conta e senha em cada aplicação, o usuário pode utilizar um provedor conhecido para realizar o processo de autenticação.</p><p>A aplicação não precisa “receber a senha do Google” para usar o fluxo OAuth. O processo ocorre por redirecionamentos e tokens controlados pelo provedor.</p></div><aside class="analogy"><strong>💡 Pense assim: uma credencial confiável</strong><p>É como apresentar uma credencial emitida por uma instituição reconhecida. A aplicação confia no processo realizado pelo provedor e recebe uma resposta de autenticação.</p></aside></div>
       </div>
 
-      <div class="jwt-card card"><span class="kicker">Visualização</span><h3>JWT em três partes</h3><div class="jwt-token"><span class="jwt-header">HEADER</span><i>.</i><span class="jwt-payload">PAYLOAD</span><i>.</i><span class="jwt-signature">SIGNATURE</span></div><div class="jwt-grid"><p><strong>Header</strong><br/>Metadados sobre o token.</p><p><strong>Payload</strong><br/>Informações/claims transportadas.</p><p><strong>Signature</strong><br/>Parte usada na verificação da integridade/autenticidade do token.</p></div><small>Demonstração conceitual; não utilize tokens reais nesta página.</small></div>
+      <div class="client-id-card card"><div><span class="kicker">Conceito da atividade</span><h3><code>client_id</code>: quem está pedindo o login?</h3><p>Na análise proposta no roteiro, o aluno precisa identificar a finalidade do <code>client_id</code>. Ele representa a aplicação cadastrada no provedor OAuth e ajuda o serviço a reconhecer quem está solicitando o fluxo de autenticação.</p></div><div class="analogy blue"><strong>💡 Pense assim: o crachá da aplicação</strong><p>Quando a aplicação chega ao “balcão” do Google para iniciar o login, ela precisa se identificar. O <code>client_id</code> funciona como esse identificador.</p></div></div>
 
-      <div class="ux-states card"><span class="kicker">Experiência do usuário</span><h3>Estados da autenticação</h3><div class="state-buttons"><button data-state="normal">Normal</button><button data-state="loading">Carregando</button><button data-state="success">Sucesso</button><button data-state="error">Erro</button></div><div class="state-preview" id="statePreview"><button>Entrar com Google</button><p>Pronto para autenticar.</p></div></div>
+      <div class="auth-flow card"><div class="auth-node">Usuário</div><span>→</span><div class="auth-node">Front-End</div><span>→</span><div class="auth-node">Google OAuth</div><span>→</span><div class="auth-node">Back-End</div><span>→</span><div class="auth-node">JWT</div><span>→</span><div class="auth-node success">Sessão autenticada</div></div>
+
+      <div class="login-demo card"><div><span class="kicker">Simulador didático</span><h3>O que acontece ao clicar em “Entrar com Google”?</h3><p>O simulador não faz autenticação real. Ele mostra a sequência de etapas para você visualizar o fluxo.</p><button class="google-btn" id="loginDemo">G <span>Entrar com Google</span></button></div><ol id="loginSteps"><li>Pronto para iniciar.</li></ol></div>
+
+      <div class="theory-block card">
+        <div class="theory-title"><span class="theory-number blue">2</span><div><h3>JWT: como a aplicação reconhece uma sessão autenticada?</h3><p>O roteiro pede que o estudante explique o propósito do JWT gerado pelo back-end depois da validação do token do Google.</p></div></div>
+        <div class="two-col"><div><p>JWT é um formato de token compacto. Em um fluxo de autenticação, ele pode ser usado pelo back-end para representar informações da sessão e permitir que requisições posteriores sejam reconhecidas como autenticadas.</p><p><strong>Importante:</strong> token não deve ser tratado como se fosse uma senha comum nem exposto sem necessidade.</p></div><aside class="analogy"><strong>💡 Pense assim: pulseira de um evento</strong><p>Depois que sua entrada é validada, você recebe uma pulseira. Em áreas autorizadas, ela serve como sinal de que você já passou pela verificação.</p></aside></div>
+      </div>
+
+      <div class="jwt-card card"><span class="kicker">Visualização conceitual</span><h3>JWT em três partes</h3><div class="jwt-token"><span class="jwt-header">HEADER</span><i>.</i><span class="jwt-payload">PAYLOAD</span><i>.</i><span class="jwt-signature">SIGNATURE</span></div><div class="jwt-grid"><p><strong>Header</strong><br/>Metadados sobre o token e seu formato.</p><p><strong>Payload</strong><br/>Informações/claims transportadas no token.</p><p><strong>Signature</strong><br/>Parte utilizada para verificar integridade/autenticidade.</p></div><small>Demonstração didática. Não cole tokens reais nesta página.</small></div>
+
+      <div class="theory-block card">
+        <h3>🎛️ Por que loading, sucesso e erro importam no front-end?</h3><p>O material destaca que o usuário precisa receber feedback enquanto aguarda o Google ou o servidor. Sem esse retorno visual, ele pode pensar que o sistema travou ou clicar várias vezes.</p>
+        <div class="analogy inline"><strong>💡 Pense assim: “seu pedido está sendo preparado”</strong><p>Um spinner ou mensagem de carregamento informa que existe uma ação em andamento.</p></div>
+        <div class="states-theory"><div><b>Normal</b><span>Pronto para iniciar.</span></div><div><b>Loading</b><span>Aguardando resposta.</span></div><div><b>Sucesso</b><span>Operação concluída.</span></div><div><b>Erro</b><span>Algo falhou e o usuário precisa ser orientado.</span></div></div>
+      </div>
+
+      <div class="ux-states card"><span class="kicker">Experiência do usuário</span><h3>Teste os estados da autenticação</h3><div class="state-buttons"><button data-state="normal">Normal</button><button data-state="loading">Carregando</button><button data-state="success">Sucesso</button><button data-state="error">Erro</button></div><div class="state-preview" id="statePreview"><button>Entrar com Google</button><p>Pronto para autenticar.</p></div></div>
+
+      <div class="error-compare card"><div><h4>❌ Mensagem pouco amigável</h4><pre>Error 500 OAuth callback exception</pre></div><div><h4>✅ Mensagem orientativa</h4><pre>Não foi possível realizar o login.
+Verifique sua conexão e tente novamente.</pre></div></div>
 
       <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 3 — Autenticação com OAuth e JWT</h3><p>Abra os slides e depois faça o quiz e a atividade prática.</p></div><a class="btn primary" href="materiais/aula3_oauth_jwt.pptx" target="_blank">Abrir slides</a></div>
       <div class="quiz card" data-quiz="auth"><div class="quiz-head"><h3>Quiz — Aula 3</h3><span class="quiz-score" id="score-auth">0/5</span></div><div id="quiz-auth"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="auth">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="auth">Refazer</button></div><div class="quiz-result" id="result-auth"></div></div>
     </section>
 
     <section id="laboratorio" class="section">
-      <div class="section-head"><span class="kicker">Prática guiada</span><h2>Laboratório Front-End</h2><p>Trechos curtos para relacionar os conceitos com o código. Os exemplos são didáticos e não substituem os códigos originais do roteiro.</p></div>
-      <div class="lab-grid">
-        <article class="code-card"><h3>Consumindo um recurso</h3><pre><code>fetch('/api/produtos')
-  .then(r =&gt; r.json())
-  .then(dados =&gt; console.log(dados));</code></pre><p>Representa o consumo de um endpoint e leitura de JSON.</p></article>
-        <article class="code-card"><h3>Estado de carregamento</h3><pre><code>setLoading(true);
+      <div class="section-head"><span class="kicker">Prática guiada</span><h2>Laboratório Front-End</h2><p>Agora os conceitos aparecem em pequenos trechos de código. A ideia é entender o papel de cada linha antes de pensar em programas maiores.</p></div>
+      <div class="lab-grid rich">
+        <article class="code-card"><span class="badge blue">REST</span><h3>Consumindo um recurso</h3><pre><code>fetch('/api/produtos')
+  .then(resposta =&gt; resposta.json())
+  .then(dados =&gt; console.log(dados));</code></pre><div class="line-explain"><p><code>fetch()</code> inicia a requisição.</p><p><code>resposta.json()</code> interpreta o corpo como JSON.</p><p>O segundo <code>.then()</code> trabalha com os dados recebidos.</p></div><div class="analogy inline"><strong>💡 Analogia:</strong><p>você faz um pedido e combina o que fará quando a entrega chegar.</p></div></article>
+        <article class="code-card"><span class="badge blue">UX</span><h3>Estado de carregamento</h3><pre><code>setLoading(true);
 // aguarda a operação
-setLoading(false);</code></pre><p>Ajuda a comunicar ao usuário que uma ação está em andamento.</p></article>
-        <article class="code-card"><h3>Tratamento visual de erro</h3><pre><code>setError('Erro na autenticação. Tente novamente.');</code></pre><p>O roteiro pede explicitamente mensagens de erro visíveis.</p></article>
-        <article class="code-card"><h3>Armazenamento local</h3><pre><code>localStorage.setItem('token', jwt);</code></pre><p>Exemplo ilustrativo ligado à discussão do roteiro sobre armazenamento/uso do JWT no front-end.</p></article>
+setLoading(false);</code></pre><div class="line-explain"><p><code>true</code> indica que a operação começou.</p><p><code>false</code> indica que ela terminou.</p></div><div class="analogy inline"><strong>💡 Analogia:</strong><p>acender e apagar a placa “atendimento em andamento”.</p></div></article>
+        <article class="code-card"><span class="badge blue">Erro</span><h3>Feedback para o usuário</h3><pre><code>setError(
+  'Erro na autenticação. Tente novamente.'
+);</code></pre><div class="line-explain"><p>O estado guarda uma mensagem que pode ser exibida na interface.</p><p>O objetivo é orientar o usuário em vez de deixá-lo sem resposta.</p></div></article>
+        <article class="code-card"><span class="badge blue">Token</span><h3>Exemplo de armazenamento local</h3><pre><code>localStorage.setItem('token', jwt);</code></pre><div class="line-explain"><p>Este é apenas um exemplo didático ligado à pergunta do roteiro sobre armazenamento e uso do JWT no front-end.</p><p>Em aplicações reais, decisões de armazenamento exigem análise de segurança do projeto.</p></div></article>
       </div>
     </section>
 
     <section id="atividade" class="section soft">
-      <div class="section-head"><span class="kicker">Atividade prática</span><h2>Analisando a integração de autenticação em uma aplicação front-end</h2><p>O roteiro propõe analisar uma solução com Google OAuth e JWT e, depois, melhorar o tratamento de erros e o feedback visual.</p></div>
+      <div class="section-head"><span class="kicker">Atividade prática</span><h2>Analisando a integração de autenticação em uma aplicação front-end</h2><p>O roteiro propõe analisar uma solução com Google OAuth e JWT e depois melhorar o tratamento de erros e o feedback visual.</p></div>
       <div class="material-card card"><div><span class="badge">DOCX original</span><h3>Roteiro de Atividade Prática</h3><p>Consulte o arquivo original sempre que precisar do contexto completo.</p></div><a class="btn primary" href="materiais/atividade_oauth_jwt.docx" target="_blank">Abrir roteiro</a></div>
 
       <div class="activity-card card">
+        <div class="remember"><strong>📚 Antes de responder</strong><p>Relembre: o <code>client_id</code> identifica a aplicação cadastrada no provedor OAuth. Sua resposta deve explicar a finalidade e localizar onde ele aparece no fluxo/código estudado.</p></div>
         <label><strong>1.</strong> Qual a finalidade do <code>client_id</code> na implementação do OAuth e onde ele é utilizado dentro do código da aplicação?<textarea data-save="answer1" rows="5" placeholder="Escreva sua resposta..."></textarea></label>
+        <div class="remember"><strong>📚 Antes de responder</strong><p>A função <code>handleGoogleLogin</code> está relacionada ao início do redirecionamento do usuário para o provedor de autenticação. Observe no material/código quais parâmetros formam a URL.</p></div>
         <label><strong>2.</strong> Explique como a função <code>handleGoogleLogin</code> funciona para redirecionar o usuário para o login do Google. Qual URL é gerada para a autenticação?<textarea data-save="answer2" rows="6" placeholder="Baseie sua resposta no roteiro/código estudado."></textarea></label>
+        <div class="remember"><strong>📚 Antes de responder</strong><p>Pense na troca entre front-end e back-end: um token recebido no fluxo precisa ser enviado para validação, e o servidor devolve uma resposta própria para a aplicação.</p></div>
         <label><strong>3.</strong> Descreva o que ocorre na função <code>handleTokenExchange</code>. Como o token do Google é enviado para o back-end, e o que o back-end retorna?<textarea data-save="answer3" rows="6" placeholder="Descreva o fluxo observado no material."></textarea></label>
+        <div class="remember"><strong>📚 Antes de responder</strong><p>Relembre o papel do JWT depois que o back-end valida a autenticação: ele ajuda a aplicação a reconhecer requisições/autorização da sessão.</p></div>
         <label><strong>4.</strong> Qual é o propósito do JWT gerado pelo back-end após a validação do token do Google? Como ele é armazenado e utilizado no front-end?<textarea data-save="answer4" rows="6" placeholder="Escreva sua análise."></textarea></label>
       </div>
 
@@ -162,12 +228,13 @@ setLoading(false);</code></pre><p>Ajuda a comunicar ao usuário que uma ação e
       </div>
 
       <div class="activity-card card"><span class="kicker">Evidências</span><h3>Telas e melhorias implementadas</h3><p>Selecione imagens para pré-visualizar e incluir no PDF enquanto esta página permanecer aberta.</p><input id="evidenceFiles" type="file" accept="image/*" multiple /><div id="evidencePreview" class="evidence-grid"></div></div>
-
       <div class="activity-card card"><span class="kicker">Relatório</span><h3>Registro final</h3><p>O roteiro solicita um relatório com as respostas, o código e as telas das melhorias implementadas.</p><label>Conclusão / síntese do relatório<textarea data-save="reportConclusion" rows="8" placeholder="Resuma o que foi analisado, quais melhorias foram realizadas e o que você aprendeu."></textarea></label></div>
     </section>
 
     <section id="quiz-final" class="section">
-      <div class="section-head"><span class="kicker">Revisão geral</span><h2>Teste seus conhecimentos</h2><p>Questões baseadas nos principais pontos apresentados nas três aulas.</p></div>
+      <div class="section-head"><span class="kicker">Revisão geral</span><h2>Teste seus conhecimentos</h2><p>Agora misturamos conceitos e situações para verificar se você entende quando e por que cada tecnologia aparece.</p></div>
+      <div class="summary-map card"><h3>Mapa mental da semana</h3><div class="summary-flow"><span>Front-End</span><b>→</b><span>Serviços externos</span><b>→</b><span>REST / GraphQL</span><b>→</b><span>Autenticação</span><b>→</b><span>OAuth</span><b>→</b><span>JWT</span><b>→</b><span>Feedback visual</span></div></div>
+      <div class="one-line-grid"><div><b>API</b><span>permite que sistemas conversem.</span></div><div><b>REST</b><span>organiza recursos e ações por HTTP.</span></div><div><b>GraphQL</b><span>permite solicitar campos específicos.</span></div><div><b>OAuth</b><span>coordena autorização/autenticação com outro serviço.</span></div><div><b>JWT</b><span>é um formato compacto de token.</span></div><div><b>Feedback</b><span>informa loading, sucesso e erro.</span></div></div>
       <div class="quiz card" data-quiz="final"><div class="quiz-head"><h3>Quiz geral — Semana 22</h3><span class="quiz-score" id="score-final">0/10</span></div><div id="quiz-final-box"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="final">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="final">Refazer</button></div><div class="quiz-result" id="result-final"></div></div>
     </section>
 

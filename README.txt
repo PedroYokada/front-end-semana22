@@ -1,21 +1,25 @@
 SITE INTERATIVO — PROGRAMAÇÃO FRONT-END — SEMANA 22
 
-CONTEÚDO
-- index.html: página principal
-- style.css: estilos e responsividade
-- script.js: quizzes, simuladores, localStorage, revisão e geração de PDF
-- materiais/: slides originais e roteiro DOCX
+Conteúdo principal:
+- Aula 1: APIs RESTful, requisição/resposta, stateless, URLs, JSON, métodos HTTP e documentação.
+- Aula 2: GraphQL, query, schema, types, relacionamentos e consultas personalizadas.
+- Aula 3: OAuth, JWT, login com Google, client_id, fluxo de autenticação, loading e mensagens de erro.
+- Laboratório com explicações linha a linha e analogias simples.
+- Atividade prática baseada no DOCX original, com respostas salvas no navegador.
+- Upload de evidências, quiz geral, revisão e geração de PDF.
+
+ARQUIVOS
+index.html   — página principal
+style.css    — aparência e responsividade
+script.js    — interações, quizzes, salvamento e PDF
+materiais/   — slides e atividade originais
 
 COMO USAR
-1. Extraia o arquivo ZIP inteiro.
-2. Mantenha a estrutura de pastas.
-3. Abra index.html no navegador.
-4. Para gerar PDF com o botão dedicado, é necessária conexão com a internet para carregar a biblioteca jsPDF pelo CDN.
-5. Caso a biblioteca não carregue, use o botão “Imprimir / Salvar como PDF”.
+1. Extraia o ZIP.
+2. Abra index.html em um navegador moderno.
+3. Mantenha a pasta materiais junto dos demais arquivos para os botões de slides funcionarem.
+4. Para gerar o PDF com jsPDF, o computador precisa de internet para carregar a biblioteca externa.
+5. Se jsPDF não carregar, use o botão "Imprimir / Salvar como PDF".
 
-OBSERVAÇÕES
-- As respostas são salvas localmente no navegador com localStorage.
-- Imagens de evidência são mantidas apenas durante a sessão atual e podem ser incluídas no PDF se selecionadas antes de gerar o arquivo.
-- A simulação de login não realiza autenticação real.
-- Os quizzes e resumos foram construídos a partir do conteúdo dos materiais fornecidos.
-- As questões discursivas mantêm a formulação do roteiro, sem fornecer gabarito automático para os pontos que dependem do código/roteiro anterior mencionado no documento.
+OBSERVAÇÃO
+As respostas são salvas localmente no navegador com localStorage. Não há envio automático para servidor.
