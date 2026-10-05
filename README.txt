@@ -1,25 +1,29 @@
-SITE INTERATIVO — PROGRAMAÇÃO FRONT-END — SEMANA 22
-
-Conteúdo principal:
-- Aula 1: APIs RESTful, requisição/resposta, stateless, URLs, JSON, métodos HTTP e documentação.
-- Aula 2: GraphQL, query, schema, types, relacionamentos e consultas personalizadas.
-- Aula 3: OAuth, JWT, login com Google, client_id, fluxo de autenticação, loading e mensagens de erro.
-- Laboratório com explicações linha a linha e analogias simples.
-- Atividade prática baseada no DOCX original, com respostas salvas no navegador.
-- Upload de evidências, quiz geral, revisão e geração de PDF.
-
-ARQUIVOS
-index.html   — página principal
-style.css    — aparência e responsividade
-script.js    — interações, quizzes, salvamento e PDF
-materiais/   — slides e atividade originais
+PROGRAMAÇÃO FRONT-END — SEMANA 22
+Versão corrigida e testada por validação estrutural
 
 COMO USAR
-1. Extraia o ZIP.
-2. Abra index.html em um navegador moderno.
-3. Mantenha a pasta materiais junto dos demais arquivos para os botões de slides funcionarem.
-4. Para gerar o PDF com jsPDF, o computador precisa de internet para carregar a biblioteca externa.
-5. Se jsPDF não carregar, use o botão "Imprimir / Salvar como PDF".
+1. Extraia todo o ZIP mantendo as pastas.
+2. Abra index.html no navegador.
+3. Os slides e o DOCX estão em materiais/.
 
-OBSERVAÇÃO
-As respostas são salvas localmente no navegador com localStorage. Não há envio automático para servidor.
+CORREÇÕES DESTA VERSÃO
+- Botões definidos como type="button" para evitar recarregamentos acidentais.
+- Quizzes só são corrigidos quando todas as questões foram respondidas.
+- Correção visual com acerto/erro, explicação, nota e porcentagem.
+- Botão Refazer limpa somente o quiz escolhido.
+- Respostas, notas e progresso são salvos em localStorage.
+- Validação de entrega informa exatamente o que ainda está pendente.
+- Todos os quizzes (Aulas 1, 2 e 3 + quiz final) passam a ser obrigatórios para o PDF.
+- Evidências e número da chamada continuam opcionais.
+- Geração de PDF possui tratamento de erro e alternativa Imprimir / Salvar como PDF.
+- Modo escuro/claro com preferência salva no navegador.
+
+PDF
+A geração automática usa jsPDF carregado por CDN e, portanto, requer internet para essa biblioteca. Se ela não carregar, use o botão "Imprimir / Salvar como PDF", que funciona pelo recurso nativo do navegador.
+
+ARQUIVOS
+- index.html
+- style.css
+- script.js
+- materiais/
+- assets/

@@ -1,41 +1,112 @@
-const STORAGE_KEY='frontendSemana22StateV1';
-const state=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
-let evidenceImages=[];
-const $=(s,c=document)=>c.querySelector(s); const $$=(s,c=document)=>[...c.querySelectorAll(s)];
-function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); updateProgress();}
-function toast(el,msg){el.textContent=msg; setTimeout(()=>{if(el.textContent===msg)el.textContent='';},2200)}
+const STORAGE_KEY = 'frontendSemana22StateV2';
+const THEME_KEY = 'frontendSemana22Theme';
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+const state = loadState();
+let evidenceImages = [];
+
+function loadState(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch { return {}; }
+}
+function save(){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  updateProgress();
+}
+function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
+function escapeHtml(s=''){ return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+function setStatus(message, type='info'){
+  const el=$('#deliveryStatus'); if(!el) return;
+  el.className=`status-message ${type}`; el.textContent=message; el.classList.remove('hidden');
+}
+function clearStatus(){ const el=$('#deliveryStatus'); if(el){ el.className='status-message hidden'; el.textContent=''; } }
+function toast(el,msg){ if(!el) return; el.textContent=msg; setTimeout(()=>{if(el.textContent===msg)el.textContent='';},2600); }
 
 const steps=[['identity','Identificação'],['rest','Aula 1 — REST'],['graphql','Aula 2 — GraphQL'],['auth','Aula 3 — OAuth/JWT'],['activity','Atividade prática'],['final','Quiz final']];
-function complete(key){return !!(state.completed&&state.completed[key]);}
-function markComplete(key,value=true){state.completed=state.completed||{};state.completed[key]=value;save();}
+function complete(key){ return !!state.completed?.[key]; }
+function markComplete(key,value=true){ state.completed=state.completed||{}; state.completed[key]=!!value; save(); }
 function updateProgress(){
-  const done=steps.filter(([k])=>complete(k)).length; const pct=Math.round(done/steps.length*100);
-  $('#progressPercent').textContent=pct+'%'; $('#progressRing').style.background=`conic-gradient(var(--red) ${pct*3.6}deg,#344054 0deg)`;
-  $('#progressText').textContent=done===steps.length?'Trilha concluída. Revise e gere seu PDF.':`${done} de ${steps.length} etapas concluídas.`;
-  $('#miniSteps').innerHTML=steps.map(([k,n])=>`<span class="${complete(k)?'done':''}">${complete(k)?'✓':'○'} ${n}</span>`).join('');
-  $('#timeline').innerHTML=steps.map(([k,n],i)=>`<div class="step ${complete(k)?'done':''}"><strong>${complete(k)?'✓ ':''}${i+1}. ${n}</strong><small>${complete(k)?'Concluído':'Pendente'}</small></div>`).join('');
+  const done=steps.filter(([k])=>complete(k)).length;
+  const pct=Math.round(done/steps.length*100);
+  if($('#progressPercent')) $('#progressPercent').textContent=pct+'%';
+  if($('#progressRing')) $('#progressRing').style.background=`conic-gradient(var(--red) ${pct*3.6}deg,#344054 0deg)`;
+  if($('#progressText')) $('#progressText').textContent=done===steps.length?'Trilha concluída. Revise e gere seu PDF.':`${done} de ${steps.length} etapas concluídas.`;
+  if($('#miniSteps')) $('#miniSteps').innerHTML=steps.map(([k,n])=>`<span class="${complete(k)?'done':''}">${complete(k)?'✓':'○'} ${n}</span>`).join('');
+  if($('#timeline')) $('#timeline').innerHTML=steps.map(([k,n],i)=>`<div class="step ${complete(k)?'done':''}"><strong>${complete(k)?'✓ ':''}${i+1}. ${n}</strong><small>${complete(k)?'Concluído':'Pendente'}</small></div>`).join('');
+}
+
+function initTheme(){
+  const saved=localStorage.getItem(THEME_KEY);
+  const prefersDark=window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+  const dark=saved ? saved==='dark' : prefersDark;
+  document.body.classList.toggle('dark',dark);
+  updateThemeButton();
+  $('#themeToggle')?.addEventListener('click',()=>{
+    document.body.classList.toggle('dark');
+    localStorage.setItem(THEME_KEY,document.body.classList.contains('dark')?'dark':'light');
+    updateThemeButton();
+  });
+}
+function updateThemeButton(){
+  const b=$('#themeToggle'); if(!b) return;
+  const dark=document.body.classList.contains('dark');
+  b.innerHTML=dark?'☀️ <span>Modo claro</span>':'🌙 <span>Modo escuro</span>';
+  b.setAttribute('aria-pressed',String(dark));
+}
+
+function initMenu(){
+  const nav=$('#mainNav');
+  $('#menuToggle')?.addEventListener('click',()=>nav?.classList.toggle('open'));
+  $$('#mainNav a').forEach(a=>a.addEventListener('click',()=>nav?.classList.remove('open')));
 }
 
 function initIdentity(){
-  const ids={studentName:'name',studentClass:'className',studentNumber:'number',studentDate:'date'};
-  Object.entries(ids).forEach(([id,k])=>{const el=$('#'+id); el.value=state.identity?.[k]||'';});
-  if(!$('#studentDate').value) $('#studentDate').value=new Date().toISOString().slice(0,10);
-  $('#saveIdentity').onclick=()=>{state.identity={name:$('#studentName').value.trim(),className:$('#studentClass').value.trim(),number:$('#studentNumber').value.trim(),date:$('#studentDate').value};if(state.identity.name&&state.identity.className){markComplete('identity');toast($('#identityStatus'),'✓ Identificação salva');}else toast($('#identityStatus'),'Preencha nome e turma.');save();refreshReview();};
+  const map={studentName:'name',studentClass:'className',studentNumber:'number',studentDate:'date'};
+  for(const [id,key] of Object.entries(map)){ const el=$('#'+id); if(el) el.value=state.identity?.[key]||''; }
+  if($('#studentDate') && !$('#studentDate').value) $('#studentDate').value=new Date().toISOString().slice(0,10);
+  $('#saveIdentity')?.addEventListener('click',()=>{
+    state.identity={name:$('#studentName').value.trim(),className:$('#studentClass').value.trim(),number:$('#studentNumber').value.trim(),date:$('#studentDate').value};
+    const ok=!!(state.identity.name&&state.identity.className);
+    state.completed=state.completed||{}; state.completed.identity=ok; save();
+    toast($('#identityStatus'),ok?'✓ Identificação salva':'⚠ Preencha nome e turma.');
+    refreshReview();
+  });
+  ['studentName','studentClass','studentNumber','studentDate'].forEach(id=>$('#'+id)?.addEventListener('input',()=>{
+    state.identity=state.identity||{};
+    state.identity[map[id]]=$('#'+id).value.trim();
+    state.completed=state.completed||{}; state.completed.identity=!!(state.identity.name&&state.identity.className); save();
+  }));
 }
 
 const methodExamples={GET:{title:'GET — leitura de dados',text:'Usado para consultar/ler um recurso.',code:'GET /users/1\n→ retorna os dados do usuário 1'},POST:{title:'POST — criação',text:'Usado para criar um novo recurso.',code:'POST /users\nbody: { "nome": "Ana" }'},PUT:{title:'PUT — atualização',text:'Usado para atualizar um recurso.',code:'PUT /users/1\nbody: { "nome": "Ana Silva" }'},DELETE:{title:'DELETE — remoção',text:'Usado para remover um recurso.',code:'DELETE /users/1'}};
 function initRest(){
-  $$('#httpMethods button').forEach(b=>b.onclick=()=>{ $$('#httpMethods button').forEach(x=>x.classList.remove('active'));b.classList.add('active');const d=methodExamples[b.dataset.method];$('#methodExplain').innerHTML=`<strong>${d.title}</strong><p>${d.text}</p><code>${d.code.replace(/\n/g,'<br>')}</code>`;});
-  $('#simulateGet').onclick=async()=>{const c=$('#restConsole');c.textContent='GET /api/produtos\nEnviando requisição...';await delay(500);c.textContent+='\n200 OK\n'+JSON.stringify({id:1,nome:'Produto',preco:49.90},null,2);};
+  $$('#httpMethods button').forEach(b=>b.addEventListener('click',()=>{
+    $$('#httpMethods button').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+    const d=methodExamples[b.dataset.method]; if($('#methodExplain')) $('#methodExplain').innerHTML=`<strong>${d.title}</strong><p>${d.text}</p><code>${d.code.replace(/\n/g,'<br>')}</code>`;
+  }));
+  $('#simulateGet')?.addEventListener('click',async()=>{
+    const c=$('#restConsole'); if(!c) return; c.textContent='GET /api/produtos\nEnviando requisição...'; await delay(450); c.textContent+='\n200 OK\n'+JSON.stringify({id:1,nome:'Produto',preco:49.90},null,2);
+  });
 }
-function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 function initGraphQL(){
-  function render(){const fields=$$('.gql-field:checked').map(x=>x.value);const body=fields.length?fields.join('\n    '):'# selecione um campo';$('#gqlQuery').textContent=`query {\n  usuario {\n    ${body}\n  }\n}`;const obj={};fields.forEach(f=>obj[f]=f==='nome'?'Marina':f==='email'?'marina@email.com':'(11) 99999-0000');$('#gqlResponse').textContent=JSON.stringify({data:{usuario:obj}},null,2);}
-  $$('.gql-field').forEach(x=>x.onchange=render);render();
+  function render(){
+    const fields=$$('.gql-field:checked').map(x=>x.value);
+    const body=fields.length?fields.join('\n    '):'# selecione um campo';
+    if($('#gqlQuery')) $('#gqlQuery').textContent=`query {\n  usuario {\n    ${body}\n  }\n}`;
+    const obj={}; fields.forEach(f=>obj[f]=f==='nome'?'Marina':f==='email'?'marina@email.com':'(11) 99999-0000');
+    if($('#gqlResponse')) $('#gqlResponse').textContent=JSON.stringify({data:{usuario:obj}},null,2);
+  }
+  $$('.gql-field').forEach(x=>x.addEventListener('change',render)); render();
 }
 function initAuth(){
-  $('#loginDemo').onclick=async()=>{const list=$('#loginSteps');list.innerHTML='';for(const s of ['Redirecionando para o provedor de login…','Usuário conclui a autenticação…','Token do provedor é recebido…','Token é enviado ao back-end…','Back-end valida e retorna um JWT…','Aplicação exibe o estado autenticado.']){const li=document.createElement('li');li.textContent=s;list.appendChild(li);await delay(550);}};
-  $$('.state-buttons button').forEach(b=>b.onclick=()=>{const p=$('#statePreview'),st=b.dataset.state;p.className='state-preview '+st;if(st==='normal')p.innerHTML='<button>Entrar com Google</button><p>Pronto para autenticar.</p>';if(st==='loading')p.innerHTML='<button disabled>⏳ Aguarde...</button><p>Autenticando...</p>';if(st==='success')p.innerHTML='<button disabled>✓ Autenticado</button><p>Login realizado com sucesso.</p>';if(st==='error')p.innerHTML='<button>Entrar novamente</button><p>Erro na autenticação. Tente novamente.</p>';});
+  $('#loginDemo')?.addEventListener('click',async()=>{
+    const list=$('#loginSteps'); if(!list) return; list.innerHTML='';
+    for(const s of ['Redirecionando para o provedor de login…','Usuário conclui a autenticação…','Token do provedor é recebido…','Token é enviado ao back-end…','Back-end valida e retorna um JWT…','Aplicação exibe o estado autenticado.']){ const li=document.createElement('li'); li.textContent=s; list.appendChild(li); await delay(420); }
+  });
+  $$('.state-buttons button').forEach(b=>b.addEventListener('click',()=>{
+    const p=$('#statePreview'),st=b.dataset.state; if(!p) return; p.className='state-preview '+st;
+    const views={normal:'<button type="button">Entrar com Google</button><p>Pronto para autenticar.</p>',loading:'<button type="button" disabled>⏳ Aguarde...</button><p>Autenticando...</p>',success:'<button type="button" disabled>✓ Autenticado</button><p>Login realizado com sucesso.</p>',error:'<button type="button">Entrar novamente</button><p>Erro na autenticação. Tente novamente.</p>'}; p.innerHTML=views[st]||views.normal;
+  }));
 }
 
 const quizzes={
@@ -72,33 +143,157 @@ final:[
  {q:'Qual mensagem é mais adequada para um usuário após uma falha de login?',o:['Não foi possível realizar o login. Tente novamente.','OAuth callback exception 500 stack trace','Nenhuma mensagem','Senha do servidor inválida: linha 83'],a:0,e:'A proposta de melhoria pede mensagens claras de erro ao usuário.'},
  {q:'Ao final da atividade prática, o roteiro solicita:',o:['Relatório com respostas, código e telas das melhorias','Somente um print do quiz','Apenas uma frase','Excluir o projeto'],a:0,e:'O documento solicita um relatório com respostas e evidências das melhorias implementadas.'}
 ]};
-function renderQuiz(key,target){const qs=quizzes[key];$(target).innerHTML=qs.map((x,i)=>`<div class="question" data-i="${i}"><p>${i+1}. ${x.q}</p>${x.o.map((o,j)=>`<label class="option"><input type="radio" name="${key}-${i}" value="${j}"> ${o}</label>`).join('')}<div class="feedback hidden"></div></div>`).join('');const saved=state.quizAnswers?.[key]||{};Object.entries(saved).forEach(([i,v])=>{const el=$(`input[name="${key}-${i}"][value="${v}"]`);if(el)el.checked=true;});}
-function gradeQuiz(key){state.quizAnswers=state.quizAnswers||{};let score=0;quizzes[key].forEach((x,i)=>{const sel=$(`input[name="${key}-${i}"]:checked`);const q=$(`.quiz[data-quiz="${key}"] .question[data-i="${i}"]`);const f=$('.feedback',q);f.classList.remove('hidden','correct','wrong');if(sel){state.quizAnswers[key][i]=Number(sel.value);if(Number(sel.value)===x.a){score++;f.classList.add('correct');f.textContent='✓ Correto. '+x.e;}else{f.classList.add('wrong');f.textContent='✗ Revise. '+x.e;}}else{f.classList.add('wrong');f.textContent='Selecione uma alternativa.';}});state.scores=state.scores||{};state.scores[key]=score;$('#score-'+key).textContent=`${score}/${quizzes[key].length}`;const pct=Math.round(score/quizzes[key].length*100);$('#result-'+key).textContent=`Resultado: ${score}/${quizzes[key].length} (${pct}%).`;if(key==='rest')markComplete('rest');if(key==='graphql')markComplete('graphql');if(key==='auth')markComplete('auth');if(key==='final')markComplete('final');save();refreshReview();}
-function resetQuiz(key){state.quizAnswers=state.quizAnswers||{};delete state.quizAnswers[key];state.scores=state.scores||{};delete state.scores[key];$$(`.quiz[data-quiz="${key}"] input`).forEach(x=>x.checked=false);$$(`.quiz[data-quiz="${key}"] .feedback`).forEach(x=>{x.className='feedback hidden';x.textContent='';});$('#score-'+key).textContent=`0/${quizzes[key].length}`;$('#result-'+key).textContent='';save();}
-function initQuizzes(){renderQuiz('rest','#quiz-rest');renderQuiz('graphql','#quiz-graphql');renderQuiz('auth','#quiz-auth');renderQuiz('final','#quiz-final-box');$$('.submit-quiz').forEach(b=>b.onclick=()=>gradeQuiz(b.dataset.quiz));$$('.reset-quiz').forEach(b=>b.onclick=()=>resetQuiz(b.dataset.quiz));Object.keys(state.scores||{}).forEach(k=>{const el=$('#score-'+k);if(el)el.textContent=`${state.scores[k]}/${quizzes[k].length}`;});}
+
+function renderQuiz(key,target){
+  const qs=quizzes[key], container=$(target); if(!container) return;
+  container.innerHTML=qs.map((x,i)=>`<div class="question" data-i="${i}"><p>${i+1}. ${escapeHtml(x.q)}</p>${x.o.map((o,j)=>`<label class="option"><input type="radio" name="${key}-${i}" value="${j}"> <span>${escapeHtml(o)}</span></label>`).join('')}<div class="feedback hidden" role="status"></div></div>`).join('');
+  const saved=state.quizAnswers?.[key]||{};
+  Object.entries(saved).forEach(([i,v])=>{ const el=$(`input[name="${key}-${i}"][value="${v}"]`); if(el) el.checked=true; });
+  container.addEventListener('change',e=>{
+    if(!e.target.matches('input[type="radio"]')) return;
+    const [,index]=e.target.name.split('-').slice(-2);
+    state.quizAnswers=state.quizAnswers||{}; state.quizAnswers[key]=state.quizAnswers[key]||{}; state.quizAnswers[key][Number(index)]=Number(e.target.value); save();
+  });
+}
+function gradeQuiz(key){
+  const items=quizzes[key];
+  const unanswered=[];
+  items.forEach((_,i)=>{ if(!$(`input[name="${key}-${i}"]:checked`)) unanswered.push(i); });
+  const result=$('#result-'+key);
+  $$(`.quiz[data-quiz="${key}"] .question`).forEach(q=>q.classList.remove('unanswered'));
+  if(unanswered.length){
+    unanswered.forEach(i=>$(`.quiz[data-quiz="${key}"] .question[data-i="${i}"]`)?.classList.add('unanswered'));
+    if(result) result.textContent=`⚠ Responda todas as questões antes de corrigir. Faltam ${unanswered.length}.`;
+    return;
+  }
+  state.quizAnswers=state.quizAnswers||{}; state.quizAnswers[key]=state.quizAnswers[key]||{};
+  let score=0;
+  items.forEach((x,i)=>{
+    const sel=$(`input[name="${key}-${i}"]:checked`), chosen=Number(sel.value);
+    state.quizAnswers[key][i]=chosen;
+    const q=$(`.quiz[data-quiz="${key}"] .question[data-i="${i}"]`), f=$('.feedback',q);
+    $$('.option',q).forEach((label,j)=>{ label.classList.remove('is-correct','is-wrong'); if(j===x.a) label.classList.add('is-correct'); if(j===chosen && j!==x.a) label.classList.add('is-wrong'); });
+    f.classList.remove('hidden','correct','wrong');
+    if(chosen===x.a){ score++; f.classList.add('correct'); f.textContent='✓ Resposta correta. '+x.e; }
+    else { f.classList.add('wrong'); f.textContent='✕ Resposta incorreta. '+x.e; }
+  });
+  state.scores=state.scores||{}; state.scores[key]=score;
+  state.completed=state.completed||{}; state.completed[key==='final'?'final':key]=true;
+  save();
+  const pct=Math.round(score/items.length*100);
+  if($('#score-'+key)) $('#score-'+key).textContent=`${score}/${items.length}`;
+  if(result) result.textContent=`Resultado: ${score}/${items.length} — Aproveitamento: ${pct}%.`;
+  refreshReview();
+}
+function resetQuiz(key){
+  state.quizAnswers=state.quizAnswers||{}; delete state.quizAnswers[key];
+  state.scores=state.scores||{}; delete state.scores[key];
+  state.completed=state.completed||{}; state.completed[key==='final'?'final':key]=false;
+  $$(`.quiz[data-quiz="${key}"] input`).forEach(x=>x.checked=false);
+  $$(`.quiz[data-quiz="${key}"] .option`).forEach(x=>x.classList.remove('is-correct','is-wrong'));
+  $$(`.quiz[data-quiz="${key}"] .question`).forEach(x=>x.classList.remove('unanswered'));
+  $$(`.quiz[data-quiz="${key}"] .feedback`).forEach(x=>{x.className='feedback hidden';x.textContent='';});
+  if($('#score-'+key)) $('#score-'+key).textContent=`0/${quizzes[key].length}`;
+  if($('#result-'+key)) $('#result-'+key).textContent=''; save(); refreshReview();
+}
+function initQuizzes(){
+  renderQuiz('rest','#quiz-rest'); renderQuiz('graphql','#quiz-graphql'); renderQuiz('auth','#quiz-auth'); renderQuiz('final','#quiz-final-box');
+  $$('.submit-quiz').forEach(b=>b.addEventListener('click',()=>gradeQuiz(b.dataset.quiz)));
+  $$('.reset-quiz').forEach(b=>b.addEventListener('click',()=>resetQuiz(b.dataset.quiz)));
+  Object.keys(state.scores||{}).forEach(k=>{ const el=$('#score-'+k); if(el) el.textContent=`${state.scores[k]}/${quizzes[k].length}`; });
+}
 
 function initActivity(){
-  $$('[data-save]').forEach(el=>{el.value=state.responses?.[el.dataset.save]||'';el.addEventListener('input',()=>{state.responses=state.responses||{};state.responses[el.dataset.save]=el.value;save();checkActivityComplete();});});
-  $$('[data-save-check]').forEach(el=>{el.checked=!!state.checks?.[el.dataset.saveCheck];el.onchange=()=>{state.checks=state.checks||{};state.checks[el.dataset.saveCheck]=el.checked;save();checkActivityComplete();};});
-  $('#copyCode').onclick=async()=>{const t=$('[data-save="improvementCode"]');try{await navigator.clipboard.writeText(t.value);}catch{};};
-  $('#clearCode').onclick=()=>{if(confirm('Limpar o código preenchido?')){const t=$('[data-save="improvementCode"]');t.value='';state.responses=state.responses||{};state.responses.improvementCode='';save();}};
-  $('#evidenceFiles').onchange=async e=>{evidenceImages=[];for(const f of [...e.target.files].slice(0,6)){if(!f.type.startsWith('image/'))continue;const data=await fileToDataURL(f);evidenceImages.push({name:f.name,data});}renderEvidence();refreshReview();};
+  $$('[data-save]').forEach(el=>{
+    el.value=state.responses?.[el.dataset.save]||'';
+    el.addEventListener('input',()=>{ state.responses=state.responses||{}; state.responses[el.dataset.save]=el.value; save(); checkActivityComplete(); });
+  });
+  $$('[data-save-check]').forEach(el=>{
+    el.checked=!!state.checks?.[el.dataset.saveCheck];
+    el.addEventListener('change',()=>{ state.checks=state.checks||{}; state.checks[el.dataset.saveCheck]=el.checked; save(); checkActivityComplete(); });
+  });
+  $('#copyCode')?.addEventListener('click',async()=>{
+    const t=$('[data-save="improvementCode"]'); if(!t) return;
+    try{ await navigator.clipboard.writeText(t.value); setStatus('✓ Código copiado.','success'); }
+    catch{ t.select(); document.execCommand('copy'); setStatus('✓ Código copiado.','success'); }
+  });
+  $('#clearCode')?.addEventListener('click',()=>{
+    if(confirm('Limpar o código preenchido?')){ const t=$('[data-save="improvementCode"]'); if(t) t.value=''; state.responses=state.responses||{}; state.responses.improvementCode=''; save(); checkActivityComplete(); }
+  });
+  $('#evidenceFiles')?.addEventListener('change',async e=>{
+    evidenceImages=[];
+    for(const f of [...e.target.files].slice(0,6)){ if(!f.type.startsWith('image/')) continue; try{ evidenceImages.push({name:f.name,data:await fileToDataURL(f)}); }catch{} }
+    renderEvidence(); refreshReview();
+  });
   checkActivityComplete();
 }
-function fileToDataURL(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});}
-function renderEvidence(){$('#evidencePreview').innerHTML=evidenceImages.map((x,i)=>`<figure><img src="${x.data}" alt="Evidência ${i+1}"><figcaption>${escapeHtml(x.name)}</figcaption></figure>`).join('');}
-function checkActivityComplete(){const r=state.responses||{};const required=['answer1','answer2','answer3','answer4','improvementDescription','improvementCode','reportConclusion'];const ok=required.every(k=>(r[k]||'').trim().length>5);markComplete('activity',ok);}
-function escapeHtml(s=''){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function fileToDataURL(f){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(f); }); }
+function renderEvidence(){ if($('#evidencePreview')) $('#evidencePreview').innerHTML=evidenceImages.map((x,i)=>`<figure><img src="${x.data}" alt="Evidência ${i+1}"><figcaption>${escapeHtml(x.name)}</figcaption></figure>`).join(''); }
+function checkActivityComplete(){
+  const r=state.responses||{};
+  const required=['answer1','answer2','answer3','answer4','improvementDescription','improvementCode','reportConclusion'];
+  const ok=required.every(k=>(r[k]||'').trim().length>0);
+  state.completed=state.completed||{}; state.completed.activity=ok; save();
+}
 
-function getMissing(){const m=[];if(!state.identity?.name)m.push('Nome do aluno');if(!state.identity?.className)m.push('Turma');const r=state.responses||{};[['answer1','Questão 1'],['answer2','Questão 2'],['answer3','Questão 3'],['answer4','Questão 4'],['improvementDescription','Descrição da melhoria'],['improvementCode','Código da melhoria'],['reportConclusion','Conclusão do relatório']].forEach(([k,n])=>{if(!(r[k]||'').trim())m.push(n)});if(state.scores?.final===undefined)m.push('Quiz final');return m;}
-function refreshReview(){const i=state.identity||{},r=state.responses||{},s=state.scores||{};$('#reviewPanel').innerHTML=`<section><h3>Identificação</h3><p><strong>Nome:</strong> ${escapeHtml(i.name||'—')}<br><strong>Turma:</strong> ${escapeHtml(i.className||'—')}<br><strong>Nº:</strong> ${escapeHtml(i.number||'—')}<br><strong>Data:</strong> ${escapeHtml(i.date||'—')}</p></section><section><h3>Resultados</h3><p>REST: ${s.rest??'—'}/5<br>GraphQL: ${s.graphql??'—'}/5<br>OAuth/JWT: ${s.auth??'—'}/5<br>Quiz geral: ${s.final??'—'}/10</p></section><section><h3>Atividade</h3><p><strong>Q1:</strong> ${escapeHtml(r.answer1||'—')}</p><p><strong>Q2:</strong> ${escapeHtml(r.answer2||'—')}</p><p><strong>Q3:</strong> ${escapeHtml(r.answer3||'—')}</p><p><strong>Q4:</strong> ${escapeHtml(r.answer4||'—')}</p></section><section><h3>Melhoria</h3><p>${escapeHtml(r.improvementDescription||'—')}</p><pre>${escapeHtml(r.improvementCode||'// sem código')}</pre></section><section><h3>Conclusão do relatório</h3><p>${escapeHtml(r.reportConclusion||'—')}</p></section><section><h3>Evidências nesta sessão</h3><p>${evidenceImages.length} imagem(ns) selecionada(s).</p></section>`;}
-
-function sanitizeName(s){return (s||'Aluno').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]/g,'');}
-function pdfText(doc,text,x,y,width=170){const lines=doc.splitTextToSize(text||'—',width);doc.text(lines,x,y);return y+lines.length*5.2;}
-function ensurePage(doc,y,needed=25){if(y+needed>280){doc.addPage();return 20}return y;}
-async function generatePDF(){const missing=getMissing();const box=$('#missingItems');if(missing.length){box.classList.remove('hidden');box.innerHTML='<strong>⚠ Existem etapas pendentes:</strong><ul>'+missing.map(x=>`<li>${escapeHtml(x)}</li>`).join('')+'</ul>';box.scrollIntoView({behavior:'smooth'});return;}box.classList.add('hidden');if(!window.jspdf?.jsPDF){alert('A biblioteca de PDF não carregou. Use “Imprimir / Salvar como PDF”.');return;}const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});const i=state.identity,r=state.responses||{},s=state.scores||{};let y=20;doc.setFont('helvetica','bold');doc.setFontSize(16);doc.text('Educação Profissional Paulista',20,y);y+=8;doc.setFontSize(13);doc.text('Técnico em Desenvolvimento de Sistemas — Programação Front-End',20,y);y+=7;doc.setFontSize(11);doc.text('Semana 22 — Integração com serviços externos e esteiras de entrega',20,y);y+=12;doc.setFont('helvetica','bold');doc.text('IDENTIFICAÇÃO',20,y);y+=7;doc.setFont('helvetica','normal');y=pdfText(doc,`Nome: ${i.name}\nTurma: ${i.className}   Nº: ${i.number||'—'}   Data: ${i.date||'—'}`,20,y);y+=7;doc.setFont('helvetica','bold');doc.text('RESULTADOS DOS QUIZZES',20,y);y+=7;doc.setFont('helvetica','normal');y=pdfText(doc,`Aula 1 — REST: ${s.rest??0}/5\nAula 2 — GraphQL: ${s.graphql??0}/5\nAula 3 — OAuth/JWT: ${s.auth??0}/5\nQuiz geral: ${s.final??0}/10`,20,y);const blocks=[['QUESTÃO 1',r.answer1],['QUESTÃO 2',r.answer2],['QUESTÃO 3',r.answer3],['QUESTÃO 4',r.answer4],['MELHORIA DE ERRO E FEEDBACK',r.improvementDescription],['CÓDIGO IMPLEMENTADO',r.improvementCode],['CONCLUSÃO / RELATÓRIO',r.reportConclusion]];for(const [title,txt] of blocks){y=ensurePage(doc,y,35);y+=7;doc.setFont('helvetica','bold');doc.text(title,20,y);y+=6;doc.setFont('helvetica','normal');doc.setFontSize(title==='CÓDIGO IMPLEMENTADO'?8.5:10.5);y=pdfText(doc,txt||'—',20,y,170);doc.setFontSize(10.5);}for(let idx=0;idx<evidenceImages.length;idx++){doc.addPage();doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text(`EVIDÊNCIA ${idx+1}: ${evidenceImages[idx].name}`,20,18);try{const img=evidenceImages[idx].data;const props=doc.getImageProperties(img);const maxW=170,maxH=245,ratio=Math.min(maxW/props.width,maxH/props.height);doc.addImage(img,props.fileType,20,26,props.width*ratio,props.height*ratio);}catch{doc.text('Não foi possível inserir esta imagem.',20,30);}}doc.addPage();doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('ATIVIDADE CONCLUÍDA — SEMANA 22',20,25);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text('Relatório gerado pelo site educacional interativo de Programação Front-End.',20,34);doc.save(`FrontEnd_S22_${sanitizeName(i.name)}_${sanitizeName(i.className)}.pdf`);}
-
-function initDelivery(){refreshReview();$('#refreshReview').onclick=refreshReview;$('#generatePdf').onclick=generatePDF;$('#printFallback').onclick=()=>{refreshReview();window.print();};$('#clearProgress').onclick=()=>{if(confirm('Deseja apagar todas as respostas e o progresso deste navegador?')){localStorage.removeItem(STORAGE_KEY);location.reload();}};}
-function initMenu(){const nav=$('#mainNav');$('#menuToggle').onclick=()=>nav.classList.toggle('open');$$('#mainNav a').forEach(a=>a.onclick=()=>nav.classList.remove('open'));}
-function init(){initMenu();initIdentity();initRest();initGraphQL();initAuth();initQuizzes();initActivity();initDelivery();updateProgress();}
+function getMissing(){
+  const m=[];
+  if(!state.identity?.name?.trim()) m.push('Nome do aluno');
+  if(!state.identity?.className?.trim()) m.push('Turma');
+  for(const [key,label] of [['rest','Quiz Aula 1 — REST'],['graphql','Quiz Aula 2 — GraphQL'],['auth','Quiz Aula 3 — OAuth/JWT'],['final','Quiz final']]) if(state.scores?.[key]===undefined) m.push(label);
+  const r=state.responses||{};
+  [['answer1','Questão 1'],['answer2','Questão 2'],['answer3','Questão 3'],['answer4','Questão 4'],['improvementDescription','Descrição da melhoria'],['improvementCode','Código da melhoria'],['reportConclusion','Conclusão do relatório']].forEach(([k,n])=>{ if(!(r[k]||'').trim()) m.push(n); });
+  return m;
+}
+function refreshReview(){
+  const i=state.identity||{},r=state.responses||{},s=state.scores||{};
+  if(!$('#reviewPanel')) return;
+  $('#reviewPanel').innerHTML=`<section><h3>Identificação</h3><p><strong>Nome:</strong> ${escapeHtml(i.name||'—')}<br><strong>Turma:</strong> ${escapeHtml(i.className||'—')}<br><strong>Nº:</strong> ${escapeHtml(i.number||'—')}<br><strong>Data:</strong> ${escapeHtml(i.date||'—')}</p></section><section><h3>Resultados</h3><p>REST: ${s.rest??'—'}/5<br>GraphQL: ${s.graphql??'—'}/5<br>OAuth/JWT: ${s.auth??'—'}/5<br>Quiz geral: ${s.final??'—'}/10</p></section><section><h3>Atividade</h3><p><strong>Q1:</strong> ${escapeHtml(r.answer1||'—')}</p><p><strong>Q2:</strong> ${escapeHtml(r.answer2||'—')}</p><p><strong>Q3:</strong> ${escapeHtml(r.answer3||'—')}</p><p><strong>Q4:</strong> ${escapeHtml(r.answer4||'—')}</p></section><section><h3>Melhoria</h3><p>${escapeHtml(r.improvementDescription||'—')}</p><pre>${escapeHtml(r.improvementCode||'// sem código')}</pre></section><section><h3>Conclusão do relatório</h3><p>${escapeHtml(r.reportConclusion||'—')}</p></section><section><h3>Evidências nesta sessão</h3><p>${evidenceImages.length} imagem(ns) selecionada(s). Evidências são opcionais.</p></section>`;
+}
+function sanitizeName(s){ return (s||'Aluno').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]/g,''); }
+function pdfText(doc,text,x,y,width=170){ const lines=doc.splitTextToSize(String(text||'—'),width); doc.text(lines,x,y); return y+lines.length*5.2; }
+function ensurePage(doc,y,needed=25){ if(y+needed>280){ doc.addPage(); return 20; } return y; }
+async function generatePDF(){
+  clearStatus(); refreshReview();
+  const missing=getMissing(), box=$('#missingItems');
+  if(missing.length){
+    if(box){ box.classList.remove('hidden'); box.innerHTML='<strong>⚠ Não foi possível finalizar. Faltam:</strong><ul>'+missing.map(x=>`<li>${escapeHtml(x)}</li>`).join('')+'</ul>'; box.scrollIntoView({behavior:'smooth',block:'center'}); }
+    setStatus(`⚠ Existem ${missing.length} etapa(s) obrigatória(s) pendente(s).`,'warning'); return;
+  }
+  if(box){ box.classList.add('hidden'); box.innerHTML=''; }
+  if(!window.jspdf?.jsPDF){ setStatus('✕ A biblioteca de PDF não pôde ser carregada. Use “Imprimir / Salvar como PDF”.','error'); return; }
+  try{
+    setStatus('Gerando PDF…','info');
+    const {jsPDF}=window.jspdf, doc=new jsPDF({unit:'mm',format:'a4'}), i=state.identity||{},r=state.responses||{},s=state.scores||{}; let y=20;
+    doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.text('Educacao Profissional Paulista',20,y); y+=8;
+    doc.setFontSize(13); doc.text('Tecnico em Desenvolvimento de Sistemas - Programacao Front-End',20,y); y+=7;
+    doc.setFontSize(11); y=pdfText(doc,'Semana 22 - Integracao com servicos externos e esteiras de entrega',20,y); y+=8;
+    doc.setFont('helvetica','bold'); doc.text('IDENTIFICACAO',20,y); y+=7; doc.setFont('helvetica','normal');
+    y=pdfText(doc,`Nome: ${i.name}\nTurma: ${i.className}   No.: ${i.number||'-'}   Data: ${i.date||'-'}`,20,y); y+=7;
+    doc.setFont('helvetica','bold'); doc.text('RESULTADOS DOS QUIZZES',20,y); y+=7; doc.setFont('helvetica','normal');
+    y=pdfText(doc,`Aula 1 - REST: ${s.rest}/5\nAula 2 - GraphQL: ${s.graphql}/5\nAula 3 - OAuth/JWT: ${s.auth}/5\nQuiz geral: ${s.final}/10`,20,y);
+    const blocks=[['QUESTAO 1',r.answer1],['QUESTAO 2',r.answer2],['QUESTAO 3',r.answer3],['QUESTAO 4',r.answer4],['MELHORIA DE ERRO E FEEDBACK',r.improvementDescription],['CODIGO IMPLEMENTADO',r.improvementCode],['CONCLUSAO / RELATORIO',r.reportConclusion]];
+    for(const [title,txt] of blocks){ y=ensurePage(doc,y,35); y+=7; doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.text(title,20,y); y+=6; doc.setFont('helvetica','normal'); doc.setFontSize(title==='CODIGO IMPLEMENTADO'?8.3:10.5); y=pdfText(doc,txt,20,y,170); }
+    for(let idx=0;idx<evidenceImages.length;idx++){
+      doc.addPage(); doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.text(`EVIDENCIA ${idx+1}: ${sanitizeName(evidenceImages[idx].name)}`,20,18);
+      try{ const img=evidenceImages[idx].data, props=doc.getImageProperties(img), maxW=170,maxH=245,ratio=Math.min(maxW/props.width,maxH/props.height); doc.addImage(img,props.fileType,20,26,props.width*ratio,props.height*ratio); } catch {}
+    }
+    doc.addPage(); doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.text('ATIVIDADE CONCLUIDA - SEMANA 22',20,25);
+    doc.save(`FrontEnd_S22_${sanitizeName(i.name)}_${sanitizeName(i.className)}.pdf`);
+    setStatus('✓ PDF gerado com sucesso. Verifique a pasta de downloads do navegador.','success');
+  }catch(err){ console.error('Falha ao gerar PDF:',err); setStatus('✕ Ocorreu um erro ao gerar o PDF. Use “Imprimir / Salvar como PDF” como alternativa.','error'); }
+}
+function initDelivery(){
+  refreshReview();
+  $('#refreshReview')?.addEventListener('click',()=>{ refreshReview(); const m=getMissing(); setStatus(m.length?`Revisão atualizada. Ainda faltam ${m.length} item(ns).`:'✓ Revisão atualizada. A atividade está pronta para gerar o PDF.',m.length?'warning':'success'); });
+  $('#generatePdf')?.addEventListener('click',generatePDF);
+  $('#printFallback')?.addEventListener('click',()=>{ refreshReview(); window.print(); });
+  $('#clearProgress')?.addEventListener('click',()=>{ if(confirm('Deseja apagar todas as respostas e o progresso deste navegador?')){ localStorage.removeItem(STORAGE_KEY); location.reload(); } });
+}
+function makeButtonsSafe(){ $$('button').forEach(b=>{ if(!b.hasAttribute('type')) b.type='button'; }); }
+function init(){
+  try{
+    makeButtonsSafe(); initTheme(); initMenu(); initIdentity(); initRest(); initGraphQL(); initAuth(); initQuizzes(); initActivity(); initDelivery(); updateProgress();
+  }catch(err){ console.error('Erro de inicialização:',err); setStatus('✕ O site encontrou um erro ao iniciar. Recarregue a página e verifique o console.','error'); }
+}
 document.addEventListener('DOMContentLoaded',init);

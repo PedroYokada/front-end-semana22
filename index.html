@@ -12,7 +12,7 @@
 <body>
   <header class="topbar">
     <div class="brand"><span class="brand-mark">&lt;/&gt;</span><div><strong>Programação Front-End</strong><small>Semana 22 • Integração com serviços externos</small></div></div>
-    <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">☰</button>
+    <div class="topbar-actions"><button id="themeToggle" class="theme-toggle" type="button" aria-label="Alternar tema" aria-pressed="false">🌙 <span>Modo escuro</span></button><button id="menuToggle" class="menu-toggle" type="button" aria-label="Abrir menu">☰</button></div>
     <nav id="mainNav" aria-label="Navegação principal">
       <a href="#inicio">Início</a><a href="#rest">REST</a><a href="#graphql">GraphQL</a><a href="#auth">OAuth/JWT</a><a href="#laboratorio">Laboratório</a><a href="#atividade">Atividade</a><a href="#quiz-final">Quiz final</a><a href="#entrega">Entrega</a>
     </nav>
@@ -39,7 +39,7 @@
         <label>Turma<input id="studentClass" type="text" placeholder="Ex.: 2º DS A" /></label>
         <label>Nº da chamada (opcional)<input id="studentNumber" type="text" inputmode="numeric" placeholder="Ex.: 17" /></label>
         <label>Data<input id="studentDate" type="date" /></label>
-        <div class="form-actions"><button class="btn primary" id="saveIdentity">Salvar identificação</button><span class="save-status" id="identityStatus" role="status"></span></div>
+        <div class="form-actions"><button type="button" class="btn primary" id="saveIdentity">Salvar identificação</button><span class="save-status" id="identityStatus" role="status"></span></div>
       </div>
     </section>
 
@@ -82,10 +82,10 @@
         <div class="theory-title"><span class="theory-number">2</span><div><h3>Métodos HTTP: o que você quer fazer?</h3><p>O método ajuda a indicar a intenção da requisição.</p></div></div>
         <div class="analogy inline"><strong>💡 Pense em uma loja:</strong><p>consultar, cadastrar, atualizar e remover são ações diferentes. Os métodos HTTP ajudam a expressar essas intenções.</p></div>
         <div class="method-grid" id="httpMethods">
-          <button data-method="GET"><strong>GET</strong><span>Consultar / ler</span></button>
-          <button data-method="POST"><strong>POST</strong><span>Criar</span></button>
-          <button data-method="PUT"><strong>PUT</strong><span>Atualizar</span></button>
-          <button data-method="DELETE"><strong>DELETE</strong><span>Remover</span></button>
+          <button type="button" data-method="GET"><strong>GET</strong><span>Consultar / ler</span></button>
+          <button type="button" data-method="POST"><strong>POST</strong><span>Criar</span></button>
+          <button type="button" data-method="PUT"><strong>PUT</strong><span>Atualizar</span></button>
+          <button type="button" data-method="DELETE"><strong>DELETE</strong><span>Remover</span></button>
         </div>
         <div class="code-explainer card inner" id="methodExplain"><strong>Escolha um método HTTP.</strong><p>O exemplo aparecerá aqui.</p></div>
       </div>
@@ -100,10 +100,10 @@
 
       <details class="think-card"><summary>🤔 Pare e pense: por que usar uma API pronta?</summary><p>Porque uma aplicação pode aproveitar uma funcionalidade externa em vez de desenvolver tudo do zero. O próprio material usa o envio de SMS como exemplo de integração com um serviço pronto.</p></details>
 
-      <div class="simulator card"><div><span class="kicker">Simulador</span><h3>Requisição REST</h3><p>Clique para visualizar uma requisição de leitura e uma resposta JSON simulada.</p><button class="btn primary" id="simulateGet">Executar GET</button></div><pre id="restConsole" aria-live="polite">// aguardando requisição...</pre></div>
+      <div class="simulator card"><div><span class="kicker">Simulador</span><h3>Requisição REST</h3><p>Clique para visualizar uma requisição de leitura e uma resposta JSON simulada.</p><button type="button" class="btn primary" id="simulateGet">Executar GET</button></div><pre id="restConsole" aria-live="polite">// aguardando requisição...</pre></div>
 
       <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 1 — Integração com APIs RESTful</h3><p>Abra os slides, acompanhe o conteúdo original e volte para responder ao quiz.</p></div><a class="btn primary" href="materiais/aula1_restful.pptx" target="_blank">Abrir slides</a></div>
-      <div class="quiz card" data-quiz="rest"><div class="quiz-head"><h3>Quiz — Aula 1</h3><span class="quiz-score" id="score-rest">0/5</span></div><div id="quiz-rest"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="rest">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="rest">Refazer</button></div><div class="quiz-result" id="result-rest"></div></div>
+      <div class="quiz card" data-quiz="rest"><div class="quiz-head"><h3>Quiz — Aula 1</h3><span class="quiz-score" id="score-rest">0/5</span></div><div id="quiz-rest"></div><div class="quiz-actions"><button type="button" class="btn primary submit-quiz" data-quiz="rest">Corrigir quiz</button><button type="button" class="btn ghost reset-quiz" data-quiz="rest">Refazer</button></div><div class="quiz-result" id="result-rest"></div></div>
     </section>
 
     <section id="graphql" class="section lesson-section">
@@ -145,7 +145,7 @@
       <div class="life-card wide"><strong>🌎 Onde isso aparece na vida real?</strong><span>Interfaces com várias telas podem precisar de combinações diferentes de dados. GraphQL permite que cada consulta expresse os campos necessários para aquela situação.</span></div>
 
       <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 2 — Integração com GraphQL</h3><p>O material também orienta uma atividade prática em dupla para consulta e manipulação de dados.</p></div><a class="btn primary" href="materiais/aula2_graphql.pptx" target="_blank">Abrir slides</a></div>
-      <div class="quiz card" data-quiz="graphql"><div class="quiz-head"><h3>Quiz — Aula 2</h3><span class="quiz-score" id="score-graphql">0/5</span></div><div id="quiz-graphql"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="graphql">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="graphql">Refazer</button></div><div class="quiz-result" id="result-graphql"></div></div>
+      <div class="quiz card" data-quiz="graphql"><div class="quiz-head"><h3>Quiz — Aula 2</h3><span class="quiz-score" id="score-graphql">0/5</span></div><div id="quiz-graphql"></div><div class="quiz-actions"><button type="button" class="btn primary submit-quiz" data-quiz="graphql">Corrigir quiz</button><button type="button" class="btn ghost reset-quiz" data-quiz="graphql">Refazer</button></div><div class="quiz-result" id="result-graphql"></div></div>
     </section>
 
     <section id="auth" class="section soft lesson-section">
@@ -165,7 +165,7 @@
 
       <div class="auth-flow card"><div class="auth-node">Usuário</div><span>→</span><div class="auth-node">Front-End</div><span>→</span><div class="auth-node">Google OAuth</div><span>→</span><div class="auth-node">Back-End</div><span>→</span><div class="auth-node">JWT</div><span>→</span><div class="auth-node success">Sessão autenticada</div></div>
 
-      <div class="login-demo card"><div><span class="kicker">Simulador didático</span><h3>O que acontece ao clicar em “Entrar com Google”?</h3><p>O simulador não faz autenticação real. Ele mostra a sequência de etapas para você visualizar o fluxo.</p><button class="google-btn" id="loginDemo">G <span>Entrar com Google</span></button></div><ol id="loginSteps"><li>Pronto para iniciar.</li></ol></div>
+      <div class="login-demo card"><div><span class="kicker">Simulador didático</span><h3>O que acontece ao clicar em “Entrar com Google”?</h3><p>O simulador não faz autenticação real. Ele mostra a sequência de etapas para você visualizar o fluxo.</p><button type="button" class="google-btn" id="loginDemo">G <span>Entrar com Google</span></button></div><ol id="loginSteps"><li>Pronto para iniciar.</li></ol></div>
 
       <div class="theory-block card">
         <div class="theory-title"><span class="theory-number blue">2</span><div><h3>JWT: como a aplicação reconhece uma sessão autenticada?</h3><p>O roteiro pede que o estudante explique o propósito do JWT gerado pelo back-end depois da validação do token do Google.</p></div></div>
@@ -180,13 +180,13 @@
         <div class="states-theory"><div><b>Normal</b><span>Pronto para iniciar.</span></div><div><b>Loading</b><span>Aguardando resposta.</span></div><div><b>Sucesso</b><span>Operação concluída.</span></div><div><b>Erro</b><span>Algo falhou e o usuário precisa ser orientado.</span></div></div>
       </div>
 
-      <div class="ux-states card"><span class="kicker">Experiência do usuário</span><h3>Teste os estados da autenticação</h3><div class="state-buttons"><button data-state="normal">Normal</button><button data-state="loading">Carregando</button><button data-state="success">Sucesso</button><button data-state="error">Erro</button></div><div class="state-preview" id="statePreview"><button>Entrar com Google</button><p>Pronto para autenticar.</p></div></div>
+      <div class="ux-states card"><span class="kicker">Experiência do usuário</span><h3>Teste os estados da autenticação</h3><div class="state-buttons"><button type="button" data-state="normal">Normal</button><button type="button" data-state="loading">Carregando</button><button type="button" data-state="success">Sucesso</button><button type="button" data-state="error">Erro</button></div><div class="state-preview" id="statePreview"><button type="button">Entrar com Google</button><p>Pronto para autenticar.</p></div></div>
 
       <div class="error-compare card"><div><h4>❌ Mensagem pouco amigável</h4><pre>Error 500 OAuth callback exception</pre></div><div><h4>✅ Mensagem orientativa</h4><pre>Não foi possível realizar o login.
 Verifique sua conexão e tente novamente.</pre></div></div>
 
       <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 3 — Autenticação com OAuth e JWT</h3><p>Abra os slides e depois faça o quiz e a atividade prática.</p></div><a class="btn primary" href="materiais/aula3_oauth_jwt.pptx" target="_blank">Abrir slides</a></div>
-      <div class="quiz card" data-quiz="auth"><div class="quiz-head"><h3>Quiz — Aula 3</h3><span class="quiz-score" id="score-auth">0/5</span></div><div id="quiz-auth"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="auth">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="auth">Refazer</button></div><div class="quiz-result" id="result-auth"></div></div>
+      <div class="quiz card" data-quiz="auth"><div class="quiz-head"><h3>Quiz — Aula 3</h3><span class="quiz-score" id="score-auth">0/5</span></div><div id="quiz-auth"></div><div class="quiz-actions"><button type="button" class="btn primary submit-quiz" data-quiz="auth">Corrigir quiz</button><button type="button" class="btn ghost reset-quiz" data-quiz="auth">Refazer</button></div><div class="quiz-result" id="result-auth"></div></div>
     </section>
 
     <section id="laboratorio" class="section">
@@ -224,7 +224,7 @@ setLoading(false);</code></pre><div class="line-explain"><p><code>true</code> in
         <div class="check-grid"><label class="check"><input type="checkbox" data-save-check="improveError"/> Mensagem de erro</label><label class="check"><input type="checkbox" data-save-check="improveLoading"/> Indicador de carregamento</label><label class="check"><input type="checkbox" data-save-check="improveSpinner"/> Spinner</label><label class="check"><input type="checkbox" data-save-check="improveDisable"/> Botão desabilitado durante a operação</label></div>
         <label>Descreva a melhoria que você implementou<textarea data-save="improvementDescription" rows="5" placeholder="Explique a mudança e o benefício para o usuário."></textarea></label>
         <label>Cole aqui o trecho principal do código<textarea class="code-input" data-save="improvementCode" rows="14" placeholder="// Cole seu código aqui"></textarea></label>
-        <div class="inline-actions"><button class="btn ghost" id="copyCode">Copiar código</button><button class="btn ghost" id="clearCode">Limpar código</button></div>
+        <div class="inline-actions"><button type="button" class="btn ghost" id="copyCode">Copiar código</button><button type="button" class="btn ghost" id="clearCode">Limpar código</button></div>
       </div>
 
       <div class="activity-card card"><span class="kicker">Evidências</span><h3>Telas e melhorias implementadas</h3><p>Selecione imagens para pré-visualizar e incluir no PDF enquanto esta página permanecer aberta.</p><input id="evidenceFiles" type="file" accept="image/*" multiple /><div id="evidencePreview" class="evidence-grid"></div></div>
@@ -235,14 +235,14 @@ setLoading(false);</code></pre><div class="line-explain"><p><code>true</code> in
       <div class="section-head"><span class="kicker">Revisão geral</span><h2>Teste seus conhecimentos</h2><p>Agora misturamos conceitos e situações para verificar se você entende quando e por que cada tecnologia aparece.</p></div>
       <div class="summary-map card"><h3>Mapa mental da semana</h3><div class="summary-flow"><span>Front-End</span><b>→</b><span>Serviços externos</span><b>→</b><span>REST / GraphQL</span><b>→</b><span>Autenticação</span><b>→</b><span>OAuth</span><b>→</b><span>JWT</span><b>→</b><span>Feedback visual</span></div></div>
       <div class="one-line-grid"><div><b>API</b><span>permite que sistemas conversem.</span></div><div><b>REST</b><span>organiza recursos e ações por HTTP.</span></div><div><b>GraphQL</b><span>permite solicitar campos específicos.</span></div><div><b>OAuth</b><span>coordena autorização/autenticação com outro serviço.</span></div><div><b>JWT</b><span>é um formato compacto de token.</span></div><div><b>Feedback</b><span>informa loading, sucesso e erro.</span></div></div>
-      <div class="quiz card" data-quiz="final"><div class="quiz-head"><h3>Quiz geral — Semana 22</h3><span class="quiz-score" id="score-final">0/10</span></div><div id="quiz-final-box"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="final">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="final">Refazer</button></div><div class="quiz-result" id="result-final"></div></div>
+      <div class="quiz card" data-quiz="final"><div class="quiz-head"><h3>Quiz geral — Semana 22</h3><span class="quiz-score" id="score-final">0/10</span></div><div id="quiz-final-box"></div><div class="quiz-actions"><button type="button" class="btn primary submit-quiz" data-quiz="final">Corrigir quiz</button><button type="button" class="btn ghost reset-quiz" data-quiz="final">Refazer</button></div><div class="quiz-result" id="result-final"></div></div>
     </section>
 
     <section id="entrega" class="section soft">
       <div class="section-head"><span class="kicker">Entrega</span><h2>Revisar e gerar PDF</h2><p>Confira suas respostas antes de criar o arquivo para anexar na plataforma.</p></div>
       <div id="missingItems" class="warning hidden" role="alert"></div>
       <div class="review-grid card" id="reviewPanel"></div>
-      <div class="delivery-actions"><button class="btn ghost" id="refreshReview">Atualizar revisão</button><button class="btn primary" id="generatePdf">Gerar PDF para entrega</button><button class="btn ghost" id="printFallback">Imprimir / Salvar como PDF</button><button class="btn danger" id="clearProgress">Limpar meu progresso</button></div>
+      <div id="deliveryStatus" class="status-message hidden" role="status" aria-live="polite"></div><div class="delivery-actions"><button type="button" class="btn ghost" id="refreshReview">Atualizar revisão</button><button type="button" class="btn primary" id="generatePdf">Gerar PDF para entrega</button><button type="button" class="btn ghost" id="printFallback">Imprimir / Salvar como PDF</button><button type="button" class="btn danger" id="clearProgress">Limpar meu progresso</button></div>
       <p class="privacy-note">As respostas ficam armazenadas localmente no navegador. O site não envia suas respostas para um servidor.</p>
     </section>
   </main>
