@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Trilha interativa de Programação Front-End: REST, GraphQL, OAuth e JWT." />
+  <title>Programação Front-End — Semana 22</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">&lt;/&gt;</span>
+      <div><strong>Programação Front-End</strong><small>Semana 22 • Integração com serviços externos</small></div>
+    </div>
+    <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">☰</button>
+    <nav id="mainNav" aria-label="Navegação principal">
+      <a href="#inicio">Início</a><a href="#rest">REST</a><a href="#graphql">GraphQL</a><a href="#auth">OAuth/JWT</a><a href="#laboratorio">Laboratório</a><a href="#atividade">Atividade</a><a href="#quiz-final">Quiz final</a><a href="#entrega">Entrega</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="inicio" class="hero section">
+      <div class="hero-copy">
+        <span class="eyebrow">Educação Profissional Paulista • Técnico em Desenvolvimento de Sistemas</span>
+        <h1>Avançando na integração com serviços externos</h1>
+        <p>Uma trilha interativa para revisar e praticar <strong>APIs RESTful, GraphQL, OAuth e JWT</strong>, conectando conceitos de integração com situações reais do desenvolvimento front-end.</p>
+        <div class="hero-actions"><a class="btn primary" href="#identificacao">Iniciar trilha</a><a class="btn ghost" href="materiais/atividade_oauth_jwt.docx" target="_blank">Abrir atividade original</a></div>
+        <div class="learning-line" aria-label="Progressão do conteúdo"><span>REST</span><b>→</b><span>GraphQL</span><b>→</b><span>OAuth</span><b>→</b><span>JWT</span><b>→</b><span>UX de autenticação</span></div>
+      </div>
+      <aside class="hero-panel">
+        <h2>Seu progresso</h2>
+        <div class="progress-ring" id="progressRing"><span id="progressPercent">0%</span></div>
+        <p id="progressText">Comece preenchendo sua identificação.</p>
+        <div class="step-mini" id="miniSteps"></div>
+      </aside>
+    </section>
+
+    <section id="identificacao" class="section soft">
+      <div class="section-head"><span class="kicker">Etapa inicial</span><h2>Identificação do estudante</h2><p>Esses dados aparecerão no relatório final e no PDF.</p></div>
+      <div class="form-grid card">
+        <label>Nome completo<input id="studentName" type="text" autocomplete="name" placeholder="Digite seu nome" /></label>
+        <label>Turma<input id="studentClass" type="text" placeholder="Ex.: 2º DS A" /></label>
+        <label>Nº da chamada (opcional)<input id="studentNumber" type="text" inputmode="numeric" placeholder="Ex.: 17" /></label>
+        <label>Data<input id="studentDate" type="date" /></label>
+        <div class="form-actions"><button class="btn primary" id="saveIdentity">Salvar identificação</button><span class="save-status" id="identityStatus" role="status"></span></div>
+      </div>
+    </section>
+
+    <section class="section" id="trilha">
+      <div class="section-head"><span class="kicker">Mapa da aprendizagem</span><h2>Trilha da Semana 22</h2></div>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section id="rest" class="section soft lesson-section">
+      <div class="section-head"><span class="kicker">Aula 1</span><h2>Integração com APIs RESTful</h2><p>REST é apresentado no material como um estilo arquitetural para criar APIs de forma padronizada e fácil de consumir. As requisições são independentes, recursos são identificados por URLs e JSON é um formato comum de resposta.</p></div>
+      <div class="concept-grid">
+        <article class="concept-card"><span class="icon">↔</span><h3>Stateless</h3><p>Cada requisição é independente; o servidor não mantém o estado do cliente entre requisições.</p></article>
+        <article class="concept-card"><span class="icon">🔗</span><h3>Recursos e URLs</h3><p>Um recurso é identificado por uma URL, como <code>/users/1</code>.</p></article>
+        <article class="concept-card"><span class="icon">{ }</span><h3>JSON</h3><p>Formato leve e comum para troca de dados entre sistemas.</p></article>
+        <article class="concept-card"><span class="icon">📖</span><h3>Documentação</h3><p>Ajuda a compreender regras, endpoints e formas corretas de integração.</p></article>
+      </div>
+
+      <div class="method-grid" id="httpMethods">
+        <button data-method="GET"><strong>GET</strong><span>Ler dados</span></button>
+        <button data-method="POST"><strong>POST</strong><span>Criar</span></button>
+        <button data-method="PUT"><strong>PUT</strong><span>Atualizar</span></button>
+        <button data-method="DELETE"><strong>DELETE</strong><span>Remover</span></button>
+      </div>
+      <div class="code-explainer card" id="methodExplain"><strong>Escolha um método HTTP.</strong><p>O exemplo aparecerá aqui.</p></div>
+
+      <div class="flow card">
+        <h3>Fluxo de uma integração</h3>
+        <div class="flow-row"><span>Front-End</span><b>requisição →</b><span>API / Serviço externo</span><b>→ resposta JSON</b><span>Front-End</span></div>
+      </div>
+
+      <div class="simulator card">
+        <div><span class="kicker">Simulador</span><h3>Requisição REST</h3><p>Clique para simular uma leitura de dados.</p><button class="btn primary" id="simulateGet">Executar GET</button></div>
+        <pre id="restConsole" aria-live="polite">// aguardando requisição...</pre>
+      </div>
+
+      <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 1 — Integração com APIs RESTful</h3><p>Abra os slides, acompanhe o conteúdo e volte para responder ao quiz.</p></div><a class="btn primary" href="materiais/aula1_restful.pptx" target="_blank">Abrir slides</a></div>
+      <div class="quiz card" data-quiz="rest"><div class="quiz-head"><h3>Quiz — Aula 1</h3><span class="quiz-score" id="score-rest">0/5</span></div><div id="quiz-rest"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="rest">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="rest">Refazer</button></div><div class="quiz-result" id="result-rest"></div></div>
+    </section>
+
+    <section id="graphql" class="section lesson-section">
+      <div class="section-head"><span class="kicker">Aula 2</span><h2>Integração com GraphQL</h2><p>O material trabalha GraphQL para consultas eficientes, definindo esquemas, tipos, consultas e relacionamentos, além de recuperar somente os dados necessários.</p></div>
+      <div class="compare-grid">
+        <article class="card"><span class="badge">REST</span><h3>Recursos por endpoints</h3><pre>GET /usuarios/1</pre><p>A resposta depende do formato definido pelo endpoint.</p></article>
+        <article class="card"><span class="badge blue">GraphQL</span><h3>Campos solicitados na consulta</h3><pre>query {
+  usuario {
+    nome
+    email
+  }
+}</pre><p>O cliente pode solicitar apenas os campos necessários.</p></article>
+      </div>
+
+      <div class="graphql-builder card">
+        <div><span class="kicker">Explorador visual</span><h3>Monte uma consulta</h3><p>Selecione os dados que deseja recuperar:</p>
+          <label class="check"><input class="gql-field" type="checkbox" value="nome" checked /> nome</label>
+          <label class="check"><input class="gql-field" type="checkbox" value="email" /> email</label>
+          <label class="check"><input class="gql-field" type="checkbox" value="telefone" /> telefone</label>
+        </div>
+        <div><h4>Query</h4><pre id="gqlQuery"></pre></div><div><h4>Resposta simulada</h4><pre id="gqlResponse"></pre></div>
+      </div>
+
+      <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 2 — Integração com GraphQL</h3><p>O material também orienta uma atividade prática em dupla de consulta e manipulação de dados.</p></div><a class="btn primary" href="materiais/aula2_graphql.pptx" target="_blank">Abrir slides</a></div>
+      <div class="quiz card" data-quiz="graphql"><div class="quiz-head"><h3>Quiz — Aula 2</h3><span class="quiz-score" id="score-graphql">0/5</span></div><div id="quiz-graphql"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="graphql">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="graphql">Refazer</button></div><div class="quiz-result" id="result-graphql"></div></div>
+    </section>
+
+    <section id="auth" class="section soft lesson-section">
+      <div class="section-head"><span class="kicker">Aula 3</span><h2>Autenticação com OAuth e JWT</h2><p>A aula aborda autenticação segura, login com conta de terceiros como Google, uso de JWT e a importância de feedback visual no front-end.</p></div>
+      <div class="auth-flow card">
+        <div class="auth-node">Usuário</div><span>→</span><div class="auth-node">Front-End</div><span>→</span><div class="auth-node">Google OAuth</div><span>→</span><div class="auth-node">Back-End</div><span>→</span><div class="auth-node">JWT</div><span>→</span><div class="auth-node success">Sessão autenticada</div>
+      </div>
+
+      <div class="login-demo card">
+        <div><span class="kicker">Simulador didático</span><h3>Fluxo de login</h3><p>Não realiza autenticação real. Apenas representa as etapas.</p><button class="google-btn" id="loginDemo">G <span>Entrar com Google</span></button></div>
+        <ol id="loginSteps"><li>Pronto para iniciar.</li></ol>
+      </div>
+
+      <div class="jwt-card card"><span class="kicker">Visualização</span><h3>JWT em três partes</h3><div class="jwt-token"><span class="jwt-header">HEADER</span><i>.</i><span class="jwt-payload">PAYLOAD</span><i>.</i><span class="jwt-signature">SIGNATURE</span></div><div class="jwt-grid"><p><strong>Header</strong><br/>Metadados sobre o token.</p><p><strong>Payload</strong><br/>Informações/claims transportadas.</p><p><strong>Signature</strong><br/>Parte usada na verificação da integridade/autenticidade do token.</p></div><small>Demonstração conceitual; não utilize tokens reais nesta página.</small></div>
+
+      <div class="ux-states card"><span class="kicker">Experiência do usuário</span><h3>Estados da autenticação</h3><div class="state-buttons"><button data-state="normal">Normal</button><button data-state="loading">Carregando</button><button data-state="success">Sucesso</button><button data-state="error">Erro</button></div><div class="state-preview" id="statePreview"><button>Entrar com Google</button><p>Pronto para autenticar.</p></div></div>
+
+      <div class="material-card card"><div><span class="badge">Material original</span><h3>Aula 3 — Autenticação com OAuth e JWT</h3><p>Abra os slides e depois faça o quiz e a atividade prática.</p></div><a class="btn primary" href="materiais/aula3_oauth_jwt.pptx" target="_blank">Abrir slides</a></div>
+      <div class="quiz card" data-quiz="auth"><div class="quiz-head"><h3>Quiz — Aula 3</h3><span class="quiz-score" id="score-auth">0/5</span></div><div id="quiz-auth"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="auth">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="auth">Refazer</button></div><div class="quiz-result" id="result-auth"></div></div>
+    </section>
+
+    <section id="laboratorio" class="section">
+      <div class="section-head"><span class="kicker">Prática guiada</span><h2>Laboratório Front-End</h2><p>Trechos curtos para relacionar os conceitos com o código. Os exemplos são didáticos e não substituem os códigos originais do roteiro.</p></div>
+      <div class="lab-grid">
+        <article class="code-card"><h3>Consumindo um recurso</h3><pre><code>fetch('/api/produtos')
+  .then(r =&gt; r.json())
+  .then(dados =&gt; console.log(dados));</code></pre><p>Representa o consumo de um endpoint e leitura de JSON.</p></article>
+        <article class="code-card"><h3>Estado de carregamento</h3><pre><code>setLoading(true);
+// aguarda a operação
+setLoading(false);</code></pre><p>Ajuda a comunicar ao usuário que uma ação está em andamento.</p></article>
+        <article class="code-card"><h3>Tratamento visual de erro</h3><pre><code>setError('Erro na autenticação. Tente novamente.');</code></pre><p>O roteiro pede explicitamente mensagens de erro visíveis.</p></article>
+        <article class="code-card"><h3>Armazenamento local</h3><pre><code>localStorage.setItem('token', jwt);</code></pre><p>Exemplo ilustrativo ligado à discussão do roteiro sobre armazenamento/uso do JWT no front-end.</p></article>
+      </div>
+    </section>
+
+    <section id="atividade" class="section soft">
+      <div class="section-head"><span class="kicker">Atividade prática</span><h2>Analisando a integração de autenticação em uma aplicação front-end</h2><p>O roteiro propõe analisar uma solução com Google OAuth e JWT e, depois, melhorar o tratamento de erros e o feedback visual.</p></div>
+      <div class="material-card card"><div><span class="badge">DOCX original</span><h3>Roteiro de Atividade Prática</h3><p>Consulte o arquivo original sempre que precisar do contexto completo.</p></div><a class="btn primary" href="materiais/atividade_oauth_jwt.docx" target="_blank">Abrir roteiro</a></div>
+
+      <div class="activity-card card">
+        <label><strong>1.</strong> Qual a finalidade do <code>client_id</code> na implementação do OAuth e onde ele é utilizado dentro do código da aplicação?<textarea data-save="answer1" rows="5" placeholder="Escreva sua resposta..."></textarea></label>
+        <label><strong>2.</strong> Explique como a função <code>handleGoogleLogin</code> funciona para redirecionar o usuário para o login do Google. Qual URL é gerada para a autenticação?<textarea data-save="answer2" rows="6" placeholder="Baseie sua resposta no roteiro/código estudado."></textarea></label>
+        <label><strong>3.</strong> Descreva o que ocorre na função <code>handleTokenExchange</code>. Como o token do Google é enviado para o back-end, e o que o back-end retorna?<textarea data-save="answer3" rows="6" placeholder="Descreva o fluxo observado no material."></textarea></label>
+        <label><strong>4.</strong> Qual é o propósito do JWT gerado pelo back-end após a validação do token do Google? Como ele é armazenado e utilizado no front-end?<textarea data-save="answer4" rows="6" placeholder="Escreva sua análise."></textarea></label>
+      </div>
+
+      <div class="activity-card card"><span class="kicker">Proposta de melhoria</span><h3>Tratamento de erros e feedback visual</h3><p>O roteiro orienta usar estado de erro, mensagem visível em caso de falha e indicador de carregamento enquanto o usuário aguarda o Google ou o servidor.</p>
+        <div class="check-grid"><label class="check"><input type="checkbox" data-save-check="improveError"/> Mensagem de erro</label><label class="check"><input type="checkbox" data-save-check="improveLoading"/> Indicador de carregamento</label><label class="check"><input type="checkbox" data-save-check="improveSpinner"/> Spinner</label><label class="check"><input type="checkbox" data-save-check="improveDisable"/> Botão desabilitado durante a operação</label></div>
+        <label>Descreva a melhoria que você implementou<textarea data-save="improvementDescription" rows="5" placeholder="Explique a mudança e o benefício para o usuário."></textarea></label>
+        <label>Cole aqui o trecho principal do código<textarea class="code-input" data-save="improvementCode" rows="14" placeholder="// Cole seu código aqui"></textarea></label>
+        <div class="inline-actions"><button class="btn ghost" id="copyCode">Copiar código</button><button class="btn ghost" id="clearCode">Limpar código</button></div>
+      </div>
+
+      <div class="activity-card card"><span class="kicker">Evidências</span><h3>Telas e melhorias implementadas</h3><p>Selecione imagens para pré-visualizar e incluir no PDF enquanto esta página permanecer aberta.</p><input id="evidenceFiles" type="file" accept="image/*" multiple /><div id="evidencePreview" class="evidence-grid"></div></div>
+
+      <div class="activity-card card"><span class="kicker">Relatório</span><h3>Registro final</h3><p>O roteiro solicita um relatório com as respostas, o código e as telas das melhorias implementadas.</p><label>Conclusão / síntese do relatório<textarea data-save="reportConclusion" rows="8" placeholder="Resuma o que foi analisado, quais melhorias foram realizadas e o que você aprendeu."></textarea></label></div>
+    </section>
+
+    <section id="quiz-final" class="section">
+      <div class="section-head"><span class="kicker">Revisão geral</span><h2>Teste seus conhecimentos</h2><p>Questões baseadas nos principais pontos apresentados nas três aulas.</p></div>
+      <div class="quiz card" data-quiz="final"><div class="quiz-head"><h3>Quiz geral — Semana 22</h3><span class="quiz-score" id="score-final">0/10</span></div><div id="quiz-final-box"></div><div class="quiz-actions"><button class="btn primary submit-quiz" data-quiz="final">Corrigir quiz</button><button class="btn ghost reset-quiz" data-quiz="final">Refazer</button></div><div class="quiz-result" id="result-final"></div></div>
+    </section>
+
+    <section id="entrega" class="section soft">
+      <div class="section-head"><span class="kicker">Entrega</span><h2>Revisar e gerar PDF</h2><p>Confira suas respostas antes de criar o arquivo para anexar na plataforma.</p></div>
+      <div id="missingItems" class="warning hidden" role="alert"></div>
+      <div class="review-grid card" id="reviewPanel"></div>
+      <div class="delivery-actions"><button class="btn ghost" id="refreshReview">Atualizar revisão</button><button class="btn primary" id="generatePdf">Gerar PDF para entrega</button><button class="btn ghost" id="printFallback">Imprimir / Salvar como PDF</button><button class="btn danger" id="clearProgress">Limpar meu progresso</button></div>
+      <p class="privacy-note">As respostas ficam armazenadas localmente no navegador. O site não envia suas respostas para um servidor.</p>
+    </section>
+  </main>
+
+  <footer><strong>Programação Front-End • Semana 22</strong><span>Integração com serviços externos e esteiras de entrega</span></footer>
+</body>
+</html>
